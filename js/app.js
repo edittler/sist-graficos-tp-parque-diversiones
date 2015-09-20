@@ -17,8 +17,7 @@ function start() {
 		setupWebGL(canvas);
 		initShaders();
 		setupBuffers();
-		//drawScene();
-		setInterval(drawScene, 10);
+		tick();
 	}
 }
 
@@ -148,4 +147,10 @@ function drawScene() {
 	gl.uniformMatrix4fv(u_model_view_matrix, false, mvMatrix);
 
 	my_grid.drawVertexGrid();
+}
+
+function tick() {
+	requestAnimationFrame(tick);
+	drawScene();
+	//animate();
 }

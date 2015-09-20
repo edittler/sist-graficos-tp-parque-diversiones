@@ -147,6 +147,17 @@ function drawScene() {
 	my_grid.drawVertexGrid();
 }
 
+/*
+ * Función que calcula el tiempo delta.
+ * El tiempo delta consiste en determinar el número de milisegundos
+ * transcurridos desde la última ejecución de la función animate, y mover
+ * los objetos en consecuencia según la velocidad por segundo que nosotros
+ * le hayamos dicho que tienen.
+ * Con el método de tiempo delta, nos aseguramos a que el objeto siempre
+ * mantenga una velocidad de animación constante, y que se vea igual en toda
+ * clase de ordenadores lentos o rápidos (siempre que tengan un mínimo
+ * de potencia para mover webgl con cierta fluidez, claro).
+ */
 function animate() {
 	var timeNow = new Date().getTime();
 	if (lastTime !== 0) {
@@ -157,6 +168,19 @@ function animate() {
 	lastTime = timeNow;
 }
 
+/*
+ * Función que ejecuta la animación.
+ * Hace uso de la función requestAnimationFrame que notifica al navegador
+ * que debe volver a pintar la escena webGL.
+ * Se podría conseguir un efecto similar al uso de requestAnimFrame,
+ * pidiéndole que sea javascript el que llame a la función drawScene
+ * con regularidad.
+ * Dado que el setInterval de javascript se ejecuta esté la pestaña abierta
+ * o no, ésto supone un increíble desperdicio de rendimiento, que podría
+ * acabar perjudicando a la velocidad de ejecución de los javascripts.
+ * Sin embargo, requestAnimFrame sólo se llama cuando el canvas donde
+ * se dibuja la escene está visible.
+ */
 function tick() {
 	requestAnimationFrame(tick);
 	drawScene();

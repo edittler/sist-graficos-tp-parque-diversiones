@@ -1,10 +1,10 @@
 var gl; // A global variable for the WebGL context
-var glProgram;
-var my_grid = null;
-var mvMatrix = mat4.create();
-var pMatrix = mat4.create();
-
+var glProgram; // Programa WebGL que manipula los shaders
+var mvMatrix = mat4.create(); // Matriz de modelo-vista
+var pMatrix = mat4.create(); // Matriz de proyección
+var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
 var t = 0.0;
+var my_grid = null;
 
 function start() {
 	var canvas = document.getElementById("glcanvas");
@@ -141,16 +141,24 @@ function drawScene() {
 	mat4.identity(mvMatrix);
 	mat4.translate(mvMatrix, mvMatrix, [0.0, 0.0, -10.0]);
 	mat4.rotate(mvMatrix, mvMatrix, t, [0.0, 1.0, 0.0]);
-	t = t + 0.01;
-	t = t + 0.01;
 
 	gl.uniformMatrix4fv(u_model_view_matrix, false, mvMatrix);
 
 	my_grid.drawVertexGrid();
 }
 
+function animate() {
+	var timeNow = new Date().getTime();
+	if (lastTime !== 0) {
+		var elapsed = timeNow - lastTime;
+
+		t += (elapsed) / 500.0;
+	}
+	lastTime = timeNow;
+}
+
 function tick() {
 	requestAnimationFrame(tick);
 	drawScene();
-	//animate();
+	animate();
 }

@@ -1,6 +1,7 @@
 var gl; // A global variable for the WebGL context
 var glProgram; // Programa WebGL que manipula los shaders
 var mvMatrix = mat4.create(); // Matriz de modelo-vista
+var mvMatrixStack = []; // Pila que almacena los estados de matriz modelo-vista
 var pMatrix = mat4.create(); // Matriz de proyección
 var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
 var t = 0.0;
@@ -12,7 +13,6 @@ function start() {
 	gl = initWebGL(canvas); // Initialize the GL context
 
 	// Only continue if WebGL is available and working
-
 	if (gl) {
 		setupWebGL(canvas);
 		initShaders();
@@ -27,8 +27,6 @@ function initWebGL(canvas) {
 	try {
 		// Try to grab the standard context. If it fails, fallback to experimental.
 		gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-		gl.viewportWidth = canvas.width;
-		gl.viewportHeight = canvas.height;
 	} catch (e) {}
 
 	// If we don't have a GL context, give up now
@@ -44,11 +42,9 @@ function setupWebGL(canvas) {
 	// Set canvas size
 	gl.canvas.width = window.innerWidth - 1;
 	gl.canvas.height = window.innerHeight - 4;
-	gl.viewport(0, 0, canvas.width, canvas.height);
 
 	// Set the clear color
 	gl.clearColor(0.1, 0.1, 0.2, 1.0);
-	gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
 // SHADERS FUNCTION
@@ -129,22 +125,44 @@ function setupBuffers() {
 	my_grid.setupWebGLBuffers();
 }
 
-function drawScene() {
-	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+/*
+ * Función para almacenar una copia de la matriz de modelo-vista en el stack.
+ * Utilizada para almanenar estados intermedios al dibujar múltiples objetos.
+ */
+function mvPushMatrix() {
+	var copy = mat4.clone(mvMatrix);
+	mvMatrixStack.push(copy);
+}
+
+/*
+ * Función para restaurar la copia anterior de la matriz de modelo-vista
+ * almacenada en el stack.
+ */
+function mvPopMatrix() {
+	if (mvMatrixStack.length === 0) {
+		throw "Invalid popMatrix!";
+	}
+	mvMatrix = mvMatrixStack.pop();
+}
+
+function setMatrixUniforms() {
 	var u_proj_matrix = gl.getUniformLocation(glProgram, "uPMatrix");
+	gl.uniformMatrix4fv(u_proj_matrix, false, pMatrix);
+	var u_model_view_matrix = gl.getUniformLocation(glProgram, "uMVMatrix");
+	gl.uniformMatrix4fv(u_model_view_matrix, false, mvMatrix);
+}
+
+function drawScene() {
+	gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	// Preparamos una matriz de perspectiva.
 	mat4.perspective(pMatrix, 45, gl.canvas.width / gl.canvas.height, 0.1, 100.0);
-	gl.uniformMatrix4fv(u_proj_matrix, false, pMatrix);
 
-	var u_model_view_matrix = gl.getUniformLocation(glProgram, "uMVMatrix");
 	// Preparamos una matriz de modelo+vista.
 	mat4.identity(mvMatrix);
 	mat4.translate(mvMatrix, mvMatrix, [0.0, 0.0, -10.0]);
-	mat4.rotate(mvMatrix, mvMatrix, t, [0.0, 1.0, 0.0]);
 
-	gl.uniformMatrix4fv(u_model_view_matrix, false, mvMatrix);
-
-	my_grid.drawVertexGrid();
+	my_grid.draw();
 }
 
 /*
@@ -163,7 +181,7 @@ function animate() {
 	if (lastTime !== 0) {
 		var elapsed = timeNow - lastTime;
 
-		t += (elapsed) / 500.0;
+		my_grid.animate(elapsed);
 	}
 	lastTime = timeNow;
 }

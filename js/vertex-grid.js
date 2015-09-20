@@ -11,6 +11,9 @@ var VertexGrid = function (rows, cols) {
 	this.webgl_position_buffer = null;
 	this.webgl_color_buffer = null;
 	this.webgl_index_buffer = null;
+
+	// Esto no es intrínseco de una grilla. Ver si se puede poner en otro lado.
+	this.time = 0.0;
 };
 
 
@@ -161,9 +164,20 @@ VertexGrid.prototype.drawVertexGrid = function () {
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.webgl_index_buffer);
 
 	// Dibujamos.
+	setMatrixUniforms();
 	gl.drawElements(gl.TRIANGLE_STRIP, this.index_buffer.length, gl.UNSIGNED_SHORT, 0);
 };
 
+VertexGrid.prototype.draw = function () {
+	mvPushMatrix();
+	mat4.rotate(mvMatrix, mvMatrix, this.time, [0.0, 1.0, 0.0]);
+	this.drawVertexGrid();
+	mvPopMatrix();
+};
+
+VertexGrid.prototype.animate = function(elapsedTime) {
+	this.time = this.time + (elapsedTime / 500.0);
+};
 
 // This is a port of Ken Perlin's Java code. The
 // original Java code is at http://cs.nyu.edu/%7Eperlin/noise/.

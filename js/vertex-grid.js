@@ -27,29 +27,34 @@ VertexGrid.prototype.createIndexBuffer = function () {
 	// triangle-strip
 	//
 
-	// Number of vertexes needed for grid
-	var RCvertices = 2 * this.cols * (this.rows - 1),
-		// Number of vertexes needed for triangle strip
-		TSvertices = 2 * this.cols * (this.rows - 1) + 2 * (this.rows - 2),
-		j = 0, // Index for triangle strip array
+	var n = 0,
+		colSteps = this.cols * 2,
+		rowSteps = this.rows - 1,
 		trianglestrip = [];
-	for (var i = 1; i <= RCvertices; i += 2) { // Loop through grid array
-		trianglestrip[j] = (1 + i) / 2 - 1; // ODD numbers
-		trianglestrip[j + 1] = (this.cols * 2 + i + 1) / 2 - 1; // EVEN numbers
-		if (trianglestrip[j + 1] % this.cols === 0) { // Check for end of column
-			// Skip first row and last row
-			if (trianglestrip[j + 1] !== this.cols && trianglestrip[j + 1] !== this.cols * this.rows) {
-				// Additional vertex degenerate triangle
-				trianglestrip[j + 2] = trianglestrip[j + 1];
-				// Additional vertex degenerate triangle
-				trianglestrip[j + 3] = (1 + i + 2) / 2;
-				j += 2; // Increment index
+
+	for (var r = 0; r < rowSteps; r++) {
+		for (var c = 0; c < colSteps; c++) {
+			var t = c + r * colSteps;
+
+			if (c == colSteps - 1) {
+				trianglestrip.push(n);
+			} else {
+				trianglestrip.push(n);
+
+				if (t % 2 === 0) {
+					n += this.cols;
+				} else {
+					if (r % 2 === 0) {
+						n -= (this.cols - 1);
+					} else {
+						n -= (this.cols + 1);
+					}
+				}
 			}
 		}
-		j += 2; // Increment index
 	}
+
 	this.index_buffer = trianglestrip;
-	//this.index_buffer = [0, 1, 2, 3];
 };
 
 
@@ -175,7 +180,7 @@ VertexGrid.prototype.draw = function () {
 	mvPopMatrix();
 };
 
-VertexGrid.prototype.animate = function(elapsedTime) {
+VertexGrid.prototype.animate = function (elapsedTime) {
 	this.time = this.time + (elapsedTime / 500.0);
 };
 

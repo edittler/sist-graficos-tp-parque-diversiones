@@ -9,11 +9,11 @@ var my_grid = null;
 function start() {
 	var canvas = document.getElementById("glcanvas");
 
-	gl = initWebGL(); // Initialize the GL context
+	gl = initWebGL(canvas); // Initialize the GL context
 
 	// Only continue if WebGL is available and working
 	if (gl) {
-		setupWebGL(canvas);
+		setupWebGL();
 		initShaders();
 		setupBuffers();
 		tick();
@@ -118,7 +118,7 @@ function initShaders() {
 }
 
 function setupBuffers() {
-	my_grid = new VertexGrid(3, 3);
+	my_grid = new VertexGrid(3, 2);
 	my_grid.createTerrainPlaneGrid();
 	my_grid.createIndexBuffer();
 	my_grid.setupWebGLBuffers();

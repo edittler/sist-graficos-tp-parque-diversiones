@@ -1,0 +1,15 @@
+{
+	"undef": true,
+	"unused": true,
+	"curly": true,
+	"indent": 4,
+	"devel": true,
+	"globals": {
+		"document": true,
+		"window": true,
+		"Uint16Array": true,
+		"Float32Array": true,
+		"mat4": true,
+		"gl": true
+	}
+}

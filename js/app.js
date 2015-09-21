@@ -4,13 +4,12 @@ var mvMatrix = mat4.create(); // Matriz de modelo-vista
 var mvMatrixStack = []; // Pila que almacena los estados de matriz modelo-vista
 var pMatrix = mat4.create(); // Matriz de proyección
 var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
-var t = 0.0;
 var my_grid = null;
 
 function start() {
 	var canvas = document.getElementById("glcanvas");
 
-	gl = initWebGL(canvas); // Initialize the GL context
+	gl = initWebGL(); // Initialize the GL context
 
 	// Only continue if WebGL is available and working
 	if (gl) {
@@ -38,7 +37,7 @@ function initWebGL(canvas) {
 	return gl;
 }
 
-function setupWebGL(canvas) {
+function setupWebGL() {
 	// Set canvas size
 	gl.canvas.width = window.innerWidth - 1;
 	gl.canvas.height = window.innerHeight - 4;

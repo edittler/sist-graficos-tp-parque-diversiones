@@ -9,6 +9,10 @@ body {
 	background-color: grey;
 }
 
+.game {
+	background: #a03131;
+}
+
 canvas {
 	background-color: midnightblue;
 	width: 100%;

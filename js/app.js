@@ -121,7 +121,6 @@ function setupBuffers() {
 	my_grid = new VertexGrid(10, 10);
 	my_grid.createTerrainPlaneGrid();
 	my_grid.createIndexBuffer();
-	my_grid.setupWebGLBuffers();
 }
 
 /*

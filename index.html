@@ -49,10 +49,399 @@
 		}
 	</script>
 
+	<script id="basico-vs" type="shader">
+		// Los atributos son características propias de cada vertice.
+		attribute vec3 aVertexPosition;
+		attribute vec4 aVertexColor;
+
+		// Los uniforms son características propias de una etapa de dibujado completa.
+		// Son comunes a todos los vertices involucrados en el dibujado.
+		uniform mat4 uMVMatrix;  // Model View
+		uniform mat4 uPMatrix;  // Perspective
+
+		// Los varying son propiedades que toman valor para cada fragmento a partir
+		// de interpolar linealmente entre los valores que se les asigna en cada
+		// vértice del polígono al cual pertenecen.
+		varying highp vec4 vColor;
+
+		void main(void) {
+			// gl_Position es una variable "built-in" de GLSL que es usada para
+			// almacenar la posición resultante del fragmento.
+			gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+			vColor = aVertexColor;
+		}
+	</script>
+
+	<script id="basico-fs" type="shader">
+		varying highp vec4 vColor;
+
+		void main(void) {
+			// gl_FragColor es una variable "built-in" de GLSL que es usada para
+			// almacenar el color resultante del fragmento.
+			gl_FragColor = vColor;
+		}
+	</script>
+
+	<script id="conIluminacion-vs" type="shader">
+		// Atributos de los vértices
+		attribute vec3 aVertexPosition;  // Posición (x, y, z)
+		attribute vec3 aVertexNormal;   // Normal (nx, ny, nz)
+		attribute vec4 aVertexColor;
+
+		// Matrices de transformación
+		uniform mat4 uMVMatrix;  // Matriz Model-View
+		uniform mat4 uPMatrix;  // Matriz de Proyección
+		uniform mat3 uNMatrix;  // Matriz de Normales
+
+		// Variables de salida
+		varying highp vec4 vColor;
+		varying vec3 vNormal;
+		varying vec3 vVertexPos;
+
+		void main(void) {
+			vColor = aVertexColor;
+
+			vec4 vertPos4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+			gl_Position = uPMatrix * vertPos4;
+
+			vNormal = uNMatrix * aVertexNormal;
+			vVertexPos = vec3(vertPos4) / vertPos4.w;
+		}
+	</script>
+
+	<script id="conIluminacion-fs" type="shader">
+		precision mediump float;
+
+		// Variables utilizadas para la iluminación
+		uniform bool uUseLighting;
+		uniform vec3 uAmbientColor;
+
+		uniform vec3 uDirectionalColor;
+		uniform vec3 uLightPosition;
+
+		uniform vec3 uCarLightColor;
+		uniform vec3 uCarLightTransformedPosition;
+		uniform vec3 uCarLightTransformedDirection;
+		uniform vec3 uCameraPos;
+
+		uniform float uShininess;
+
+		varying highp vec4 vColor;
+		varying vec3 vNormal;
+		varying vec3 vVertexPos;
+
+		uniform sampler2D uSampler;
+
+		void main(void) {
+			float shininess = uShininess;
+			const float spotlightCutOff = 0.7; // en radianes
+			const float spotLightExponent = 2.0;
+
+			// Attenuation constants
+			const float constantAtt = 1.0;
+			const float linearAtt = 0.0001;
+			const float quadraticAtt = 0.01;
+
+			vec3 normal = normalize(vNormal);
+			vec3 lightDir = normalize(uLightPosition - vVertexPos);
+
+			float lambertian = max(dot(lightDir, normal), 0.0);
+			float specular = 0.0;
+
+			if(lambertian > 0.0) {
+				vec3 reflectDir = reflect(-lightDir, normal);
+				vec3 viewDir = normalize(-vVertexPos);
+
+				float specAngle = max(dot(reflectDir, viewDir), 0.0);
+				specular = pow(specAngle, shininess);
+			}
+
+			//Calculos spotlight
+			vec3 vectorToLightSource = (uCarLightTransformedPosition - vVertexPos);
+			float diffuseLightWeighting = max(dot(normal, vectorToLightSource), 0.0);
+
+			vec3 spotLightIntensity = vec3(0.0,0.0,0.0);
+
+			if (diffuseLightWeighting > 0.0) {
+				// Calculate attenuation
+				float distance = length(uCarLightTransformedPosition- vVertexPos);
+				float att = 1.0/(constantAtt+linearAtt * distance + quadraticAtt * distance * distance);
+				//	att = 1.0;
+				float spotEffect = dot(normalize(uCarLightTransformedDirection), normalize(-vectorToLightSource));
+
+				if (spotEffect > spotlightCutOff) {
+					spotEffect = pow(spotEffect, spotLightExponent);
+					vec3 reflectionVector =	normalize(reflect(-vectorToLightSource,	normal));
+					vec3 viewVectorEye = normalize(uCameraPos - vVertexPos);
+					float rdotv = max(dot(reflectionVector, viewVectorEye), 0.0);
+					float specularLightWeighting = pow(rdotv, shininess);
+					spotLightIntensity = spotEffect * att * (uCarLightColor * diffuseLightWeighting + uCarLightColor * specularLightWeighting);
+				}
+			}
+
+			vec3 lightIntensity =  uAmbientColor + spotLightIntensity + lambertian*uDirectionalColor + specular*uDirectionalColor ;
+
+			vec4 fcolor = vec4(vColor.rgb * lightIntensity, vColor.a);
+			gl_FragColor = fcolor;
+		}
+	</script>
+
+	<script id="basicoTextura-vs" type="shader">
+		attribute vec3 aVertexPosition;
+		attribute vec2 aTextureCoord;
+
+		// Matrices de transformación
+		// Matriz Model-View
+		uniform mat4 uMVMatrix;
+
+		// Matriz de Proyección
+		uniform mat4 uPMatrix;
+
+		// Variables de salida
+		varying vec2 vTextureCoord;
+		varying vec3 vLightIntensity;
+
+		void main(void) {
+			vec3 vertice = aVertexPosition;
+
+			// Transformamos al vértice al espacio de la cámara
+			vec4 pos_camera_view = uMVMatrix * vec4(vertice, 1.0);
+
+			// Transformamos al vértice al espacio de la proyección
+			gl_Position = uPMatrix * pos_camera_view;
+
+			// Coordenada de textura sin modifiaciones
+			vTextureCoord = aTextureCoord;
+
+			vLightIntensity = vec3(1.0, 1.0, 1.0);
+		}
+	</script>
+
+	<script id="basicoTextura-fs" type="shader">
+		precision mediump float;
+
+		varying vec2 vTextureCoord;
+		varying vec3 vLightIntensity;
+
+		uniform sampler2D uSampler;
+
+		void main(void) {
+			// Se obtiene el color de la imagen, en el punto asociado al fragmento
+			// utilizando sus coordenadas de textura
+			vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+
+			// Se combina el color de la imagen obtenido, en este caso, multiplicándolo
+			// con un factor que representa la intensidad de la luz.
+			vec4 fcolor = vec4(textureColor.rgb * vLightIntensity, textureColor.a);
+			gl_FragColor = fcolor;
+		}
+	</script>
+
+	<script id="conIluminacionYTextura-vs" type="shader">
+		precision mediump float;
+
+		attribute vec3 aVertexPosition;
+		attribute vec3 aVertexNormal;
+		attribute vec3 aVertexTangent;
+		attribute vec2 aTextureCoord;
+
+		// Matrices de transformación
+		// Matriz Model-View
+		uniform mat4 uMVMatrix;
+
+		// Matriz de Proyección
+		uniform mat4 uPMatrix;
+
+		// Matriz de Normales
+		uniform mat3 uNMatrix;
+
+		uniform vec3 uLightPosition;
+		uniform vec3 uCarLightTransformedPosition;
+		uniform vec3 uCarLightTransformedDirection;
+		uniform bool uUsingNormalMap;
+
+		// Variables de salida
+		varying vec2 vTextureCoord;
+		varying vec3 vNormal;
+		varying vec3 vLightDir;
+		varying vec3 vViewDir;
+		varying vec3 vSpotLight;
+		varying vec3 vSpotLightDir;
+
+		void main(void) {
+			vTextureCoord = aTextureCoord;
+
+			vec4 vertPos4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+			gl_Position = uPMatrix * vertPos4;
+			vec3 pos = vec3(vertPos4) / vertPos4.w;
+
+			vNormal = normalize(uNMatrix * aVertexNormal);
+			vLightDir = uLightPosition - pos;
+			vViewDir = normalize(-pos);
+			vSpotLight = uCarLightTransformedPosition - pos;
+			vSpotLightDir = uCarLightTransformedDirection;
+
+			if (uUsingNormalMap) {
+				// Transform normal and tangent to eye space
+				vec3 norm = vNormal;
+				vec3 tang = normalize(uNMatrix * aVertexTangent);
+				vec3 binormal = normalize(cross(norm, tang));
+
+				// Matrix for transformation to tangent space
+				mat3 toObjectLocal = mat3(
+					tang.x, binormal.x, norm.x,
+					tang.y, binormal.y, norm.y,
+					tang.z, binormal.z, norm.z
+				);
+
+				// Transform vectors to tangent space
+				vLightDir = toObjectLocal * vLightDir;
+				vViewDir = toObjectLocal * vViewDir;
+				vSpotLight = toObjectLocal * vSpotLight;
+				vSpotLightDir = toObjectLocal * vSpotLightDir;
+			}
+		}
+	</script>
+
+	<script id="conIluminacionYTextura-fs" type="shader">
+		precision mediump float;
+
+		// Variables utilizadas para la iluminación
+		uniform vec3 uAmbientColor;
+		uniform vec3 uDirectionalColor;
+
+		uniform vec3 uCarLightColor;
+
+		uniform float uShininess;
+		uniform float uLightMapFactor;
+		uniform float uReflectionFactor;
+
+		uniform bool uUsingLightMap;
+		uniform bool uUsingNormalMap;
+		uniform bool uUsingReflectionMap;
+
+		varying vec2 vTextureCoord;
+		varying vec3 vNormal;
+		varying vec3 vLightDir;
+		varying vec3 vViewDir;
+		varying vec3 vSpotLight;
+		varying vec3 vSpotLightDir;
+
+		uniform sampler2D uSampler;
+		uniform sampler2D uSamplerLightMap;
+		uniform sampler2D uSamplerNormalMap;
+
+		uniform samplerCube uReflectionMap;
+
+		void main(void) {
+			float shininess = uShininess;
+			const float spotlightCutOff = 0.7;  // en radianes
+			const float spotLightExponent = 2.0;
+
+			// Attenuation constants
+			const float constantAtt = 1.0;
+			const float linearAtt = 0.0001;
+			const float quadraticAtt = 0.01;
+
+			vec3 normal = vNormal;
+			if(uUsingNormalMap) {
+				// Extrae la normal desde el normalMap
+				normal = vec3(2.0*texture2D(uSamplerNormalMap, vTextureCoord) - 1.0);
+			}
+
+			vec3 lightDir = normalize(vLightDir);
+			vec3 viewDir = vViewDir;
+
+			float lambertian = max(dot(lightDir, normal), 0.0);
+			float specular = 0.0;
+
+			if (lambertian > 0.0) {
+				vec3 reflectDir = reflect(-lightDir, normal);
+				float specAngle = max(dot(reflectDir, viewDir), 0.0);
+				specular = pow(specAngle, shininess);
+			}
+
+			// Calculos spotlight
+			vec3 vectorToLightSource = vSpotLight;
+			float diffuseLightWeighting = max(dot(normal, vectorToLightSource), 0.0);
+
+			vec3 spotLightIntensity = vec3(0.0,0.0,0.0);
+
+			if (diffuseLightWeighting > 0.0) {
+				// Calculate attenuation
+				float distance = length(vectorToLightSource);
+				float att = 1.0/(constantAtt+linearAtt * distance + quadraticAtt * distance * distance);
+				float spotEffect = dot(normalize(vSpotLightDir), normalize(-vectorToLightSource));
+
+				if (spotEffect > spotlightCutOff) {
+					spotEffect = pow(spotEffect, spotLightExponent);
+					vec3 reflectionVector =	normalize(reflect(-vectorToLightSource,	normal));
+					float rdotv = max(dot(reflectionVector, vViewDir), 0.0);
+					float specularLightWeighting = pow(rdotv, shininess);
+					spotLightIntensity = spotEffect * att * (uCarLightColor * diffuseLightWeighting + uCarLightColor * specularLightWeighting);
+				}
+			}
+
+			vec3 lightIntensity =  uAmbientColor + spotLightIntensity + lambertian*uDirectionalColor + specular*uDirectionalColor ;
+
+			// Se obtiene el color de la imagen, en el punto asociado al fragmento
+			// utilizando sus coordenadas de textura
+			vec4 textureColor = texture2D(uSampler, vTextureCoord);
+
+			vec4 lightMapColor = vec4(1.0,1.0,1.0,1.0);
+			if (uUsingLightMap) {
+				lightMapColor = texture2D(uSamplerLightMap, vTextureCoord);
+				lightMapColor = vec4(1.0,1.0,1.0,1.0) + vec4(lightMapColor.xyz*uLightMapFactor, lightMapColor.w);
+			}
+
+			vec4 reflectionColor = vec4(0.0,0.0,0.0,1.0);
+			if (uUsingReflectionMap) {
+				vec3 reflection = -reflect(viewDir, normal);
+				reflectionColor = textureCube(uReflectionMap, reflection);
+				reflectionColor = reflectionColor * uReflectionFactor;
+			}
+
+			vec4 mixedColor = textureColor * lightMapColor + reflectionColor;
+
+			// Se combina el color de la imagen obtenido multiplicándolo
+			// con un factor que representa la intensidad de la luz.
+			gl_FragColor = vec4(mixedColor.rgb * lightIntensity, mixedColor.a);
+		}
+	</script>
+
 	<!-- Load JavaScript Local -->
+	<script src="js/core/Utils.js" defer></script>
+	<script src="js/core/Transformable.js" defer></script>
+
+	<script src="js/curve/Curve.js" defer></script>
+	<script src="js/curve/BezierCurve.js" defer></script>
+	<script src="js/curve/LinearCurve.js" defer></script>
+	<script src="js/curve/Path.js" defer></script>
+
 	<script src="js/buffer/Buffer.js" defer></script>
 	<script src="js/buffer/AttributeBuffer.js" defer></script>
 	<script src="js/buffer/IndexBuffer.js" defer></script>
+
+	<script src="js/shader/Shader.js" defer></script>
+	<script src="js/shader/ShaderProgram.js" defer></script>
+	<script src="js/shader/programs/BasicColorSP.js" defer></script>
+	<script src="js/shader/programs/LightAndColorSP.js" defer></script>
+
+	<script src="js/geometry/Geometry.js" defer></script>
+	<script src="js/geometry/SweptSurface.js" defer></script>
+	<script src="js/geometry/PointCloud.js" defer></script>
+
+	<script src="js/material/Color.js" defer></script>
+	<script src="js/material/Material.js" defer></script>
+	<script src="js/material/ColoredMaterial.js" defer></script>
+
+	<script src="js/model/Model.js" defer></script>
+	<script src="js/model/PrimitiveModel.js" defer></script>
+
+	<script src="js/goodies/shapes/Rectangle.js" defer></script>
+
+	<script src="js/goodies/polyhedrons/Box.js" defer></script>
+
 	<script src="js/vertex-grid.js" defer></script>
 	<script src="js/app.js" defer></script>
 

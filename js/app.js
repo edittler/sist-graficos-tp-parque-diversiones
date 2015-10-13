@@ -5,6 +5,7 @@ var mvMatrixStack = []; // Pila que almacena los estados de matriz modelo-vista
 var pMatrix = mat4.create(); // Matriz de proyección
 var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
 var my_grid = null;
+var caja = null;
 
 function start() {
 	var canvas = document.getElementById("glcanvas");
@@ -121,6 +122,8 @@ function setupBuffers() {
 	my_grid = new VertexGrid(10, 10);
 	my_grid.createTerrainPlaneGrid();
 	my_grid.createIndexBuffer();
+
+	caja = new Box(2.0, 2.0, 2.0, new ColoredMaterial(Color.GREY));
 }
 
 /*
@@ -161,6 +164,7 @@ function drawScene() {
 	mat4.translate(mvMatrix, mvMatrix, [0.0, 0.0, -10.0]);
 
 	my_grid.draw();
+	//caja.draw();
 }
 
 /*

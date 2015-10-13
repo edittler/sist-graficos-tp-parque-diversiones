@@ -9,6 +9,8 @@
 		"window": true,
 		"Uint16Array": true,
 		"Float32Array": true,
+		"vec3": true,
+		"mat3": true,
 		"mat4": true,
 		"gl": true
 	}

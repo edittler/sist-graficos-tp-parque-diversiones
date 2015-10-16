@@ -1,6 +1,7 @@
 // OBJETO VERTEX-GRID
 // Definimos un constructor para el objeto VertexGrid
-var VertexGrid = function (rows, cols) {
+var VertexGrid = function (gl, rows, cols) {
+	this.gl = gl;
 	this.cols = cols;
 	this.rows = rows;
 	this.indexBuffer = new IndexBuffer(gl);
@@ -133,17 +134,17 @@ VertexGrid.prototype.createTerrainPlaneGrid = function () {
 // Reemplazar dicha línea de código por la correspondiente para dibujar el strip
 // de triángulos utilizando el index buffer generado en la ACTIVIDAD 1.
 VertexGrid.prototype.drawVertexGrid = function () {
-	var vertexPositionAttribute = gl.getAttribLocation(glProgram, "aVertexPosition");
-	gl.enableVertexAttribArray(vertexPositionAttribute);
+	var vertexPositionAttribute = this.gl.getAttribLocation(glProgram, "aVertexPosition");
+	this.gl.enableVertexAttribArray(vertexPositionAttribute);
 	this.positionBuffer.associateAttrPointer(vertexPositionAttribute);
 
-	var vertexColorAttribute = gl.getAttribLocation(glProgram, "aVertexColor");
-	gl.enableVertexAttribArray(vertexColorAttribute);
+	var vertexColorAttribute = this.gl.getAttribLocation(glProgram, "aVertexColor");
+	this.gl.enableVertexAttribArray(vertexColorAttribute);
 	this.colorBuffer.associateAttrPointer(vertexColorAttribute);
 
 	// Dibujamos.
 	setMatrixUniforms();
-	this.indexBuffer.draw(gl.TRIANGLE_STRIP);
+	this.indexBuffer.draw(this.gl.TRIANGLE_STRIP);
 };
 
 VertexGrid.prototype.draw = function () {

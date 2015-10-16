@@ -410,37 +410,40 @@
 	</script>
 
 	<!-- Load JavaScript Local -->
-	<script src="js/core/Utils.js" defer></script>
-	<script src="js/core/Transformable.js" defer></script>
+	<script src="js/system/core/Utils.js" defer></script>
+	<script src="js/system/core/Transformable.js" defer></script>
 
-	<script src="js/curve/Curve.js" defer></script>
-	<script src="js/curve/BezierCurve.js" defer></script>
-	<script src="js/curve/LinearCurve.js" defer></script>
-	<script src="js/curve/Path.js" defer></script>
+	<script src="js/system/curve/Curve.js" defer></script>
+	<script src="js/system/curve/BezierCurve.js" defer></script>
+	<script src="js/system/curve/LinearCurve.js" defer></script>
+	<script src="js/system/curve/Path.js" defer></script>
 
-	<script src="js/buffer/Buffer.js" defer></script>
-	<script src="js/buffer/AttributeBuffer.js" defer></script>
-	<script src="js/buffer/IndexBuffer.js" defer></script>
+	<script src="js/system/buffer/Buffer.js" defer></script>
+	<script src="js/system/buffer/AttributeBuffer.js" defer></script>
+	<script src="js/system/buffer/IndexBuffer.js" defer></script>
 
-	<script src="js/shader/Shader.js" defer></script>
-	<script src="js/shader/ShaderProgram.js" defer></script>
-	<script src="js/shader/programs/BasicColorSP.js" defer></script>
-	<script src="js/shader/programs/LightAndColorSP.js" defer></script>
+	<script src="js/system/shader/Shader.js" defer></script>
+	<script src="js/system/shader/ShaderProgram.js" defer></script>
+	<script src="js/system/shader/programs/BasicColorSP.js" defer></script>
+	<script src="js/system/shader/programs/LightAndColorSP.js" defer></script>
 
-	<script src="js/geometry/Geometry.js" defer></script>
-	<script src="js/geometry/SweptSurface.js" defer></script>
-	<script src="js/geometry/PointCloud.js" defer></script>
+	<script src="js/system/geometry/Geometry.js" defer></script>
+	<script src="js/system/geometry/SweptSurface.js" defer></script>
+	<script src="js/system/geometry/PointCloud.js" defer></script>
 
-	<script src="js/material/Color.js" defer></script>
-	<script src="js/material/Material.js" defer></script>
-	<script src="js/material/ColoredMaterial.js" defer></script>
+	<script src="js/system/material/Color.js" defer></script>
+	<script src="js/system/material/Material.js" defer></script>
+	<script src="js/system/material/ColoredMaterial.js" defer></script>
 
-	<script src="js/model/Model.js" defer></script>
-	<script src="js/model/PrimitiveModel.js" defer></script>
+	<script src="js/system/model/Model.js" defer></script>
+	<script src="js/system/model/PrimitiveModel.js" defer></script>
 
-	<script src="js/goodies/shapes/Rectangle.js" defer></script>
+	<script src="js/system/core/Scene.js" defer></script>
+	<script src="js/system/core/Renderer.js" defer></script>
 
-	<script src="js/goodies/polyhedrons/Box.js" defer></script>
+	<script src="js/system/goodies/shapes/Rectangle.js" defer></script>
+
+	<script src="js/system/goodies/polyhedrons/Box.js" defer></script>
 
 	<script src="js/vertex-grid.js" defer></script>
 	<script src="js/app.js" defer></script>
@@ -450,9 +453,11 @@
 </head>
 
 <body class="game" onload="start()">
-	<canvas id="glcanvas" width="640" height="480">
+	<div id="canvas-container">
+	</div>
+	<!--canvas id="glcanvas" width="640" height="480">
 		Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.
-	</canvas>
+	</canvas-->
 </body>
 
 </html>

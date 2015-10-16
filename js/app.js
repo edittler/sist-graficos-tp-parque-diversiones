@@ -1,50 +1,68 @@
-var gl; // A global variable for the WebGL context
 var glProgram; // Programa WebGL que manipula los shaders
 var mvMatrix = mat4.create(); // Matriz de modelo-vista
 var mvMatrixStack = []; // Pila que almacena los estados de matriz modelo-vista
 var pMatrix = mat4.create(); // Matriz de proyección
 var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
 var my_grid = null;
-var caja = null;
+
+var renderer, escena, piso, auto, simulador;
+
+var camara, camaraOrbital, camaraSeguimiento, camaraPrimeraPersona;
+
+var ambientColor, directionalColor, directionalPosition;
+var spotlightColor, spotlightPosition, spotlightDirection;
 
 function start() {
-	var canvas = document.getElementById("glcanvas");
-
-	gl = initWebGL(canvas); // Initialize the GL context
-
-	// Only continue if WebGL is available and working
-	if (gl) {
-		setupWebGL();
-		initShaders();
-		setupBuffers();
-		tick();
-	}
+	init();
+	loop();
 }
 
-function initWebGL(canvas) {
-	gl = null;
+function init() {
+	var up = vec3.fromValues(0, 0, -1);
 
-	try {
-		// Try to grab the standard context. If it fails, fallback to experimental.
-		gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-	} catch (e) {}
+	var w = window.innerWidth - 1;
+	var h = window.innerHeight - 4;
 
-	// If we don't have a GL context, give up now
-	if (!gl) {
-		alert("Unable to initialize WebGL. Your browser may not support it.");
-		gl = null;
-	}
+	renderer = new Renderer(w, h);
 
-	return gl;
-}
+	// ubico el canvas del renderer en el body
+	var bodyCenter = document.getElementById("canvas-container");
+	bodyCenter.appendChild(renderer.getCanvasElement());
 
-function setupWebGL() {
-	// Set canvas size
-	gl.canvas.width = window.innerWidth - 1;
-	gl.canvas.height = window.innerHeight - 4;
 
-	// Set the clear color
-	gl.clearColor(0.1, 0.1, 0.2, 1.0);
+	// CREAR OBJETOS
+
+	escena = new Scene();
+
+	// habilita la iluminacion
+	ambientColor = 0.1;
+	directionalColor = 0.4;
+	spotlightColor = 1.0;
+
+	directionalPosition = [-600, 200, 400];
+	spotlightPosition = [10.0, 0.0, 0.0];
+	spotlightDirection = [1.0, 0.0, -0.7]; // TODO deberia ser -1,0,0
+
+	//escena.setAuto(auto);
+	escena.setLightSources(ambientColor, directionalColor, directionalPosition, spotlightColor, spotlightPosition, spotlightDirection);
+
+	// AGREGAR OBJETOS A LA ESCENA
+
+	var eyeSeguimiento = vec3.fromValues(-20, 0, 3);
+	var targetSeguimiento = vec3.fromValues(-4, 0, 0);
+	//camaraSeguimiento = new CamaraSeguimiento(auto, eyeSeguimiento, targetSeguimiento, up);
+
+	var eyeOrbital = vec3.fromValues(0,100,20);
+	var targetOrbital= vec3.fromValues(0,0,-10)
+	//camaraOrbital = new CamaraOrbital(eyeOrbital, targetOrbital, up);
+	//camara = camaraOrbital;
+
+	var eyePP = vec3.fromValues(0,0,6);
+	var targetPP= vec3.fromValues(3,0,6);
+	//camaraPrimeraPersona = new CamaraPrimeraPersona(eyePP, targetPP, up);
+
+	initShaders();
+	setupBuffers();
 }
 
 // SHADERS FUNCTION
@@ -94,36 +112,36 @@ function getShader(gl, id) {
 
 function initShaders() {
 	// Obtenemos los shaders ya compilados
-	var fragmentShader = getShader(gl, "shader-fs");
-	var vertexShader = getShader(gl, "shader-vs");
+	var fragmentShader = getShader(renderer.gl, "shader-fs");
+	var vertexShader = getShader(renderer.gl, "shader-vs");
 
 	// Creamos un programa de shaders de WebGL.
-	glProgram = gl.createProgram();
+	glProgram = renderer.gl.createProgram();
 
 	// Asociamos cada shader compilado al programa.
-	gl.attachShader(glProgram, vertexShader);
-	gl.attachShader(glProgram, fragmentShader);
+	renderer.gl.attachShader(glProgram, vertexShader);
+	renderer.gl.attachShader(glProgram, fragmentShader);
 
 	// Linkeamos los shaders para generar el programa ejecutable.
-	gl.linkProgram(glProgram);
+	renderer.gl.linkProgram(glProgram);
 
 	// Chequeamos y reportamos si hubo algún error.
-	if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS)) {
+	if (!renderer.gl.getProgramParameter(glProgram, renderer.gl.LINK_STATUS)) {
 		alert("Unable to initialize the shader program: " +
-			gl.getProgramInfoLog(glProgram));
+			renderer.gl.getProgramInfoLog(glProgram));
 		return null;
 	}
 
 	// Le decimos a WebGL que de aquí en adelante use el programa generado.
-	gl.useProgram(glProgram);
+	renderer.gl.useProgram(glProgram);
 }
 
 function setupBuffers() {
-	my_grid = new VertexGrid(10, 10);
+	my_grid = new VertexGrid(renderer.gl, 10, 10);
 	my_grid.createTerrainPlaneGrid();
 	my_grid.createIndexBuffer();
 
-	caja = new Box(2.0, 2.0, 2.0, new ColoredMaterial(Color.GREY));
+	//caja = new Box(2.0, 2.0, 2.0, new ColoredMaterial(Color.GREY));
 }
 
 /*
@@ -147,24 +165,23 @@ function mvPopMatrix() {
 }
 
 function setMatrixUniforms() {
-	var u_proj_matrix = gl.getUniformLocation(glProgram, "uPMatrix");
-	gl.uniformMatrix4fv(u_proj_matrix, false, pMatrix);
-	var u_model_view_matrix = gl.getUniformLocation(glProgram, "uMVMatrix");
-	gl.uniformMatrix4fv(u_model_view_matrix, false, mvMatrix);
+	var u_proj_matrix = renderer.gl.getUniformLocation(glProgram, "uPMatrix");
+	renderer.gl.uniformMatrix4fv(u_proj_matrix, false, pMatrix);
+	var u_model_view_matrix = renderer.gl.getUniformLocation(glProgram, "uMVMatrix");
+	renderer.gl.uniformMatrix4fv(u_model_view_matrix, false, mvMatrix);
 }
 
 function drawScene() {
-	gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	renderer.gl.viewport(0, 0, renderer.gl.canvas.width, renderer.gl.canvas.height);
+	renderer.clear();
 	// Preparamos una matriz de perspectiva.
-	mat4.perspective(pMatrix, 45, gl.canvas.width / gl.canvas.height, 0.1, 100.0);
+	mat4.perspective(pMatrix, 45, renderer.gl.canvas.width / renderer.gl.canvas.height, 0.1, 100.0);
 
 	// Preparamos una matriz de modelo+vista.
 	mat4.identity(mvMatrix);
 	mat4.translate(mvMatrix, mvMatrix, [0.0, 0.0, -10.0]);
 
 	my_grid.draw();
-	//caja.draw();
 }
 
 /*
@@ -178,14 +195,14 @@ function drawScene() {
  * clase de ordenadores lentos o rápidos (siempre que tengan un mínimo
  * de potencia para mover webgl con cierta fluidez, claro).
  */
-function animate() {
+function elapsedTime() {
 	var timeNow = new Date().getTime();
+	var elapsed = 0;
 	if (lastTime !== 0) {
-		var elapsed = timeNow - lastTime;
-
-		my_grid.animate(elapsed);
+		elapsed = timeNow - lastTime;
 	}
 	lastTime = timeNow;
+	return elapsed;
 }
 
 /*
@@ -201,8 +218,22 @@ function animate() {
  * Sin embargo, requestAnimFrame sólo se llama cuando el canvas donde
  * se dibuja la escene está visible.
  */
-function tick() {
-	requestAnimationFrame(tick);
+function loop() {
+	requestAnimationFrame(loop);
+
+	var tick = elapsedTime();
+
 	drawScene();
-	animate();
+
+	//listenToKeyboard(tick);
+	//listenToMouse();
+
+	//simulador.update();
+	//camaraSeguimiento.update();
+
+	escena.update();  // actualiza todos los modelos
+	//renderer.render(escena, camara.getPerspectiveCamera());
+	//auto.guardarCaniones(tick);
+
+	my_grid.animate(tick);
 }

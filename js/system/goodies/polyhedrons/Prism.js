@@ -2,7 +2,7 @@
  * Prisma
  */
 function Prism(radius1, radius2, height, faces, material) {
-	PrimitiveModel.prototype.constructor.call(this);
+	PrimitiveModel.call(this);
 
 	var side = new Path(2);
 	side.addStretch(new LinearCurve([[radius1, 0], [radius2, height]]));

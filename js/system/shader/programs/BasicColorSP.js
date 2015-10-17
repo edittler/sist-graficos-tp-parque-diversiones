@@ -10,6 +10,10 @@ function BasicColorSP() {
 	this.setSource(vs, fs);
 }
 
+BasicColorSP.prototype = Object.create(ShaderProgram.prototype);
+
+BasicColorSP.prototype.constructor = BasicColorSP;
+
 // @override
 BasicColorSP.prototype.init = function (gl) {
 	ShaderProgram.prototype.init.call(this, gl);

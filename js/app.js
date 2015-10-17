@@ -23,8 +23,8 @@ function init() {
 	renderer = new Renderer(w, h);
 
 	// ubico el canvas del renderer en el body
-	var bodyCenter = document.getElementById("canvas-container");
-	bodyCenter.appendChild(renderer.getCanvasElement());
+	var canvasContainer = document.getElementById("canvas-container");
+	canvasContainer.appendChild(renderer.getCanvasElement());
 
 	// CREAR OBJETOS
 
@@ -38,7 +38,7 @@ function init() {
 	// habilita la iluminacion
 	ambientColor = 0.8;
 	directionalColor = 0.4;
-	spotlightColor = 0.5;
+	spotlightColor = 0.0;
 
 	directionalPosition = [-600, 200, 400];
 	spotlightPosition = [10.0, 0.0, 0.0];
@@ -50,6 +50,7 @@ function init() {
 	// AGREGAR OBJETOS A LA ESCENA
 
 	escena.add(piso);
+	escena.add(fondo);
 
 	var eyeSeguimiento = vec3.fromValues(-20, 0, 3);
 	var targetSeguimiento = vec3.fromValues(-4, 0, 0);

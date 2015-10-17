@@ -9,12 +9,43 @@ body {
 	background-color: grey;
 }
 
-.game {
-	background-color: dimgrey;
+h1, h2, h3, h4, h5, h6, li, p {
+	font-family: verdana, sans-serif;
+	color: #FFF;
 }
 
-canvas {
-	background-color: midnightblue;
+#canvas-container {
 	width: 100%;
 	height: auto;
+}
+
+#instrucciones {
+	padding: 10px;
+	width: 280px;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	background-color: #000;
+	opacity: 0.8;
+	border-radius: 20px;
+}
+
+#instrucciones h4 {
+	margin: 0;
+	margin-bottom: 10px;
+}
+
+#instrucciones h5 {
+	margin: 0;
+	margin-bottom: 10px;
+}
+
+#instrucciones ul {
+	margin: 0;
+	margin-bottom: 10px;
+	padding-left: 20px;
+}
+
+#instrucciones ul li {
+	font-size: 14px;
 }

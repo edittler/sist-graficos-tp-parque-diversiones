@@ -4,7 +4,7 @@ var renderer, escena, simulador;
 
 var piso, fondo, vueltaAlMundo, sillasVoladoras, auto;
 
-var camara, camaraOrbital, camaraSeguimiento, camaraPrimeraPersona;
+var camara, camaraOrbital, camaraPrimeraPersona, camaraSeguimiento;
 
 var ambientColor, directionalColor, directionalPosition;
 var spotlightColor, spotlightPosition, spotlightDirection;
@@ -66,10 +66,6 @@ function init() {
 	escena.add(vueltaAlMundo);
 	escena.add(sillasVoladoras);
 
-	var eyeSeguimiento = vec3.fromValues(-20, 0, 3);
-	var targetSeguimiento = vec3.fromValues(-4, 0, 0);
-	//camaraSeguimiento = new CamaraSeguimiento(auto, eyeSeguimiento, targetSeguimiento, up);
-
 	var eyeOrbital = vec3.fromValues(0, 100, 20);
 	var targetOrbital = vec3.fromValues(0, 0, -10);
 	camaraOrbital = new CamaraOrbital(w, h, eyeOrbital, targetOrbital, up);
@@ -77,7 +73,11 @@ function init() {
 
 	var eyePP = vec3.fromValues(0, 0, 6);
 	var targetPP = vec3.fromValues(3, 0, 6);
-	//camaraPrimeraPersona = new CamaraPrimeraPersona(eyePP, targetPP, up);
+	camaraPrimeraPersona = new CamaraPrimeraPersona(w, h, eyePP, targetPP, up);
+
+	var eyeSeguimiento = vec3.fromValues(-20, 0, 3);
+	var targetSeguimiento = vec3.fromValues(-4, 0, 0);
+	//camaraSeguimiento = new CamaraSeguimiento(auto, eyeSeguimiento, targetSeguimiento, up);
 }
 
 function listenToKeyboard(tick) {
@@ -86,48 +86,29 @@ function listenToKeyboard(tick) {
 	// correspondientes y no en esta funcion
 
 	// camaras
-	if (Keyboard.isKeyPressed(Keyboard.N1)) {
-		camara = camaraOrbital;
-	} else if (Keyboard.isKeyPressed(Keyboard.N2)) {
-		camara = camaraSeguimiento;
-	} else if (Keyboard.isKeyPressed(Keyboard.N3)) {
-		camara = camaraPrimeraPersona;
+	if (Keyboard.isKeyPressed(Keyboard.C, true)) {
+		if (camara === camaraOrbital) {
+			camara = camaraPrimeraPersona;
+		} else if (camara === camaraPrimeraPersona) {
+			camara = camaraSeguimiento;
+		} else {
+			camara = camaraOrbital;
+		}
 	}
-	var camaraVel = 1;
 
-	if (Keyboard.isKeyPressed(Keyboard.U)) {
+	var camaraVel = 1;
+	if (Keyboard.isKeyPressed(Keyboard.W)) {
 		camaraPrimeraPersona.trasladarAdelante(camaraVel);
-	} else if (Keyboard.isKeyPressed(Keyboard.J)) {
+	} else if (Keyboard.isKeyPressed(Keyboard.S)) {
 		camaraPrimeraPersona.trasladarAtras(camaraVel);
 	}
-
-	if (Keyboard.isKeyPressed(Keyboard.K)) {
+	if (Keyboard.isKeyPressed(Keyboard.D)) {
 		camaraPrimeraPersona.trasladarDerecha(camaraVel);
-	} else if (Keyboard.isKeyPressed(Keyboard.H)) {
+	} else if (Keyboard.isKeyPressed(Keyboard.A)) {
 		camaraPrimeraPersona.trasladarIzquierda(camaraVel);
 	}
 
-	// auto
 	/*
-	var aceleracion = 0.2;
-	var giro = 0.5;
-
-	if (Keyboard.isKeyPressed(Keyboard.W)) {
-		simulador.incrementarVelocidad(aceleracion);
-	} else if (Keyboard.isKeyPressed(Keyboard.S)) {
-		simulador.incrementarVelocidad(-aceleracion);
-	} else {
-		simulador.frenarAuto(aceleracion);
-	}
-
-	if (Keyboard.isKeyPressed(Keyboard.D)) {
-		simulador.incrementarAnguloVolante(giro);
-	} else if (Keyboard.isKeyPressed(Keyboard.A)) {
-		simulador.incrementarAnguloVolante(-giro);
-	} else {
-		simulador.enderezarDireccion(giro);
-	}
-
 	var torretaVel = 0.01;
 
 	if (Keyboard.isKeyPressed(Keyboard.V)) {
@@ -177,7 +158,11 @@ function listenToMouse() {
 		var deltaX = Mouse.getDeltaX();
 		var deltaY = Mouse.getDeltaY();
 
-		camara.rotate(deltaX * speed, deltaY * speed);
+		if (camara === camaraPrimeraPersona) {
+			camara.rotate(deltaX * speed, 0);
+		} else {
+			camara.rotate(deltaX * speed, deltaY * speed);
+		}
 	}
 
 	if (camara == camaraOrbital && Mouse.isWheelMoving()) {

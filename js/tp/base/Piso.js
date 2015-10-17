@@ -1,8 +1,8 @@
 function Piso() {
 	//this.cuerpoRigido;
-	this.groundMaterial;
+	//this.groundMaterial;
 
-	var pisoSize = 1000;
+	var pisoSize = 2000;
 
 	var material = new ColoredMaterial(Color.FORESTGREEN);
 	//var material = new TexturedMaterial("images/superficie.jpg");

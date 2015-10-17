@@ -431,6 +431,7 @@
 	<!-- JavaScript del TP -->
 
 	<script src="js/tp/camaras/CamaraOrbital.js" defer></script>
+	<script src="js/tp/camaras/CamaraPrimeraPersona.js" defer></script>
 
 	<script src="js/tp/base/Piso.js" defer></script>
 	<script src="js/tp/base/Fondo.js" defer></script>
@@ -443,8 +444,32 @@
 	<link rel="stylesheet" href="css/styles.css" />
 </head>
 
-<body class="game" onload="start()">
+<body onload="start()">
 	<div id="canvas-container">
+	</div>
+	<div id="instrucciones">
+		<h4>Instrucciones</h4>
+		<div id="inst-globales">
+			<ul>
+				<li>Tecla C: Cambiar cámara</li>
+			</ul>
+		</div>
+		<div id="inst-cam-orbital">
+			<h5>Control de cámara orbital</h5>
+			<ul>
+				<li>Mov. del Mouse: Cambiar dirección hacia donde apunta la cámara</li>
+			</ul>
+		</div>
+		<div id="inst-cam-primera-persona">
+			<h5>Control de cámara 1<sup>ra</sup> persona</h5>
+			<ul>
+				<li>Mov. del Mouse: Cambiar dirección hacia donde apunta la cámara</li>
+				<li>Tecla W: Moverse hacia adelante (manteniendo dirección)</li>
+				<li>Tecla S: Moverse hacia atrás (manteniendo dirección)</li>
+				<li>Tecla A: Moverse hacia la izquierda (manteniendo dirección)</li>
+				<li>Tecla D: Moverse hacia la derecha (manteniendo dirección)</li>
+			</ul>
+		</div>
 	</div>
 </body>
 

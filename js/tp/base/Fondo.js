@@ -9,7 +9,7 @@ function Fondo() {
 	//material.translate(2.3, 0.4);
 
 	Prism.call(this, 900, 900, 1200, 24, material);
-	this.geometry.setClosedEndings(false);
+	this.geometry.setClosedEndings(true);
 
 	this.rotateX(Utils.degToRad(90));
 	this.rotateY(Utils.degToRad(270 + 45));

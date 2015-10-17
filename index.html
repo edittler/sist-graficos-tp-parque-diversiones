@@ -6,50 +6,14 @@
 	<title>66.71 Sistemas Gráficos - Parque de diversiones</title>
 
 	<!-- Load JavaScript Libraries -->
-	<script src="js/gl-matrix-min.js" defer></script>
+	<script src="js/libs/gl-matrix-min.js" defer></script>
 
 	<!--
 		Vertex shader
 
 		El vertex shader define la posición y forma de cada vertice de cada polígono.
 		-->
-	<script id="shader-vs" type="x-shader/x-vertex">
-		// Los atributos son características propias de cada vertice.
-		attribute vec3 aVertexPosition;
-		attribute vec3 aVertexColor;
-		// Los uniforms son características propias de una etapa de dibujado completa.
-		// Son comunes a todos los vertices involucrados en el dibujado.
-		uniform mat4 uMVMatrix;
-		uniform mat4 uPMatrix;
-		// Los varying son propiedades que toman valor para cada fragmento a partir
-		// de interpolar linealmente entre los valores que se les asigna en cada
-		// vértice del polígono al cual pertenecen.
-		varying highp vec4 vColor;
-		void main(void) {
-			// gl_Position es una variable "built-in" de GLSL que es usada para
-			// almacenar la posición resultante del fragmento.
-			gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-			vColor = vec4(aVertexColor,1.0);
-		}
-	</script>
-
-	<!--
-		Fragment shader
-
-		Cada pixel en un polígono se llama fragmento. El fragment shader se encarga de
-		establecer el color de cada pixel. En este caso, asignamos el color blanco a
-		cada pixel.
-		-->
-	<script id="shader-fs" type="x-shader/x-fragment">
-		varying highp vec4 vColor;
-		void main(void) {
-			// gl_FragColor es una variable "built-in" de GLSL que es usada para
-			// almacenar el color resultante del fragmento.
-			gl_FragColor = vColor;
-		}
-	</script>
-
-	<script id="basico-vs" type="shader">
+	<script id="basico-vs" type="x-shader/x-vertex">
 		// Los atributos son características propias de cada vertice.
 		attribute vec3 aVertexPosition;
 		attribute vec4 aVertexColor;
@@ -72,7 +36,14 @@
 		}
 	</script>
 
-	<script id="basico-fs" type="shader">
+	<!--
+		Fragment shader
+
+		Cada pixel en un polígono se llama fragmento. El fragment shader se encarga de
+		establecer el color de cada pixel. En este caso, asignamos el color blanco a
+		cada pixel.
+		-->
+	<script id="basico-fs" type="x-shader/x-fragment">
 		varying highp vec4 vColor;
 
 		void main(void) {
@@ -82,7 +53,7 @@
 		}
 	</script>
 
-	<script id="conIluminacion-vs" type="shader">
+	<script id="conIluminacion-vs" type="x-shader/x-vertex">
 		// Atributos de los vértices
 		attribute vec3 aVertexPosition;  // Posición (x, y, z)
 		attribute vec3 aVertexNormal;   // Normal (nx, ny, nz)
@@ -109,7 +80,7 @@
 		}
 	</script>
 
-	<script id="conIluminacion-fs" type="shader">
+	<script id="conIluminacion-fs" type="x-shader/x-fragment">
 		precision mediump float;
 
 		// Variables utilizadas para la iluminación
@@ -186,7 +157,7 @@
 		}
 	</script>
 
-	<script id="basicoTextura-vs" type="shader">
+	<script id="basicoTextura-vs" type="x-shader/x-vertex">
 		attribute vec3 aVertexPosition;
 		attribute vec2 aTextureCoord;
 
@@ -217,7 +188,7 @@
 		}
 	</script>
 
-	<script id="basicoTextura-fs" type="shader">
+	<script id="basicoTextura-fs" type="x-shader/x-fragment">
 		precision mediump float;
 
 		varying vec2 vTextureCoord;
@@ -237,7 +208,7 @@
 		}
 	</script>
 
-	<script id="conIluminacionYTextura-vs" type="shader">
+	<script id="conIluminacionYTextura-vs" type="x-shader/x-vertex">
 		precision mediump float;
 
 		attribute vec3 aVertexPosition;
@@ -303,7 +274,7 @@
 		}
 	</script>
 
-	<script id="conIluminacionYTextura-fs" type="shader">
+	<script id="conIluminacionYTextura-fs" type="x-shader/x-fragment">
 		precision mediump float;
 
 		// Variables utilizadas para la iluminación
@@ -457,7 +428,6 @@
 
 	<script src="js/tp/base/Piso.js" defer></script>
 
-	<script src="js/vertex-grid.js" defer></script>
 	<script src="js/app.js" defer></script>
 
 	<!-- Load Styles -->

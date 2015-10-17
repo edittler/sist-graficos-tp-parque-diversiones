@@ -12,6 +12,7 @@
 		"vec3": true,
 		"mat3": true,
 		"mat4": true,
-		"gl": true
+		"gl": true,
+		"Keyboard": true
 	}
 }

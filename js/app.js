@@ -2,7 +2,7 @@ var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
 
 var renderer, escena, simulador;
 
-var piso, fondo, auto;
+var piso, fondo, vueltaAlMundo, sillasVoladoras, auto;
 
 var camara, camaraOrbital, camaraSeguimiento, camaraPrimeraPersona;
 
@@ -33,6 +33,18 @@ function init() {
 	fondo = new Fondo();
 	fondo.translateY(200);
 
+	vueltaAlMundo = new VueltaAlMundo();
+	vueltaAlMundo.translateX(100);
+	vueltaAlMundo.translateZ(-10);
+	vueltaAlMundo.scale(10);
+	vueltaAlMundo.rotateX(Utils.degToRad(90));
+
+	sillasVoladoras = new SillasVoladoras();
+	sillasVoladoras.translateY(-100);
+	sillasVoladoras.translateZ(-10);
+	sillasVoladoras.scale(8);
+	sillasVoladoras.rotateX(Utils.degToRad(90));
+
 	escena = new Scene();
 
 	// habilita la iluminacion
@@ -51,19 +63,130 @@ function init() {
 
 	escena.add(piso);
 	escena.add(fondo);
+	escena.add(vueltaAlMundo);
+	escena.add(sillasVoladoras);
 
 	var eyeSeguimiento = vec3.fromValues(-20, 0, 3);
 	var targetSeguimiento = vec3.fromValues(-4, 0, 0);
 	//camaraSeguimiento = new CamaraSeguimiento(auto, eyeSeguimiento, targetSeguimiento, up);
 
-	var eyeOrbital = vec3.fromValues(0,100,20);
-	var targetOrbital= vec3.fromValues(0,0,-10)
+	var eyeOrbital = vec3.fromValues(0, 100, 20);
+	var targetOrbital = vec3.fromValues(0, 0, -10);
 	camaraOrbital = new CamaraOrbital(w, h, eyeOrbital, targetOrbital, up);
 	camara = camaraOrbital;
 
-	var eyePP = vec3.fromValues(0,0,6);
-	var targetPP= vec3.fromValues(3,0,6);
+	var eyePP = vec3.fromValues(0, 0, 6);
+	var targetPP = vec3.fromValues(3, 0, 6);
 	//camaraPrimeraPersona = new CamaraPrimeraPersona(eyePP, targetPP, up);
+}
+
+function listenToKeyboard(tick) {
+	// TODO: dado que Keyboard es estático sería bueno poner el
+	// comportamiento de a cada objeto en los metodos update()
+	// correspondientes y no en esta funcion
+
+	// camaras
+	if (Keyboard.isKeyPressed(Keyboard.N1)) {
+		camara = camaraOrbital;
+	} else if (Keyboard.isKeyPressed(Keyboard.N2)) {
+		camara = camaraSeguimiento;
+	} else if (Keyboard.isKeyPressed(Keyboard.N3)) {
+		camara = camaraPrimeraPersona;
+	}
+	var camaraVel = 1;
+
+	if (Keyboard.isKeyPressed(Keyboard.U)) {
+		camaraPrimeraPersona.trasladarAdelante(camaraVel);
+	} else if (Keyboard.isKeyPressed(Keyboard.J)) {
+		camaraPrimeraPersona.trasladarAtras(camaraVel);
+	}
+
+	if (Keyboard.isKeyPressed(Keyboard.K)) {
+		camaraPrimeraPersona.trasladarDerecha(camaraVel);
+	} else if (Keyboard.isKeyPressed(Keyboard.H)) {
+		camaraPrimeraPersona.trasladarIzquierda(camaraVel);
+	}
+
+	// auto
+	/*
+	var aceleracion = 0.2;
+	var giro = 0.5;
+
+	if (Keyboard.isKeyPressed(Keyboard.W)) {
+		simulador.incrementarVelocidad(aceleracion);
+	} else if (Keyboard.isKeyPressed(Keyboard.S)) {
+		simulador.incrementarVelocidad(-aceleracion);
+	} else {
+		simulador.frenarAuto(aceleracion);
+	}
+
+	if (Keyboard.isKeyPressed(Keyboard.D)) {
+		simulador.incrementarAnguloVolante(giro);
+	} else if (Keyboard.isKeyPressed(Keyboard.A)) {
+		simulador.incrementarAnguloVolante(-giro);
+	} else {
+		simulador.enderezarDireccion(giro);
+	}
+
+	var torretaVel = 0.01;
+
+	if (Keyboard.isKeyPressed(Keyboard.V)) {
+		auto.girarTorretaHorizontal(-torretaVel);
+	} else if (Keyboard.isKeyPressed(Keyboard.N)) {
+		auto.girarTorretaHorizontal(torretaVel);
+	}
+
+	if (Keyboard.isKeyPressed(Keyboard.G)) {
+		auto.girarTorretaVertical(-torretaVel);
+	} else if (Keyboard.isKeyPressed(Keyboard.B)) {
+		auto.girarTorretaVertical(torretaVel);
+	}
+
+	if (Keyboard.isKeyPressed(Keyboard.SPACE)) {
+		auto.dispararCaniones(tick);
+	}
+
+	// luz
+	if (Keyboard.isKeyPressed(Keyboard.Z, true)) {
+		spotlightColor = spotlightColor > 0 ? 0.0 : 1.0;
+		escena.setLightSources(ambientColor, directionalColor, directionalPosition, spotlightColor, spotlightPosition, spotlightDirection);
+	}
+
+	if (Keyboard.isKeyPressed(Keyboard.P)) {
+		spotlightColor += 0.05;
+		if (spotlightColor > 1.0) {
+			spotlightColor = 1.0;
+		}
+		escena.setLightSources(ambientColor, directionalColor, directionalPosition, spotlightColor, spotlightPosition, spotlightDirection);
+	}
+
+	if (Keyboard.isKeyPressed(Keyboard.O)) {
+		spotlightColor -= 0.05;
+		if (spotlightColor < 0) {
+			spotlightColor = 0;
+		}
+		escena.setLightSources(ambientColor, directionalColor, directionalPosition, spotlightColor, spotlightPosition, spotlightDirection);
+	}
+	*/
+}
+
+function listenToMouse() {
+	if (Mouse.isButtonPressed(Mouse.LEFT)) {
+		var speed = 10;
+
+		var deltaX = Mouse.getDeltaX();
+		var deltaY = Mouse.getDeltaY();
+
+		camara.rotate(deltaX * speed, deltaY * speed);
+	}
+
+	if (camara == camaraOrbital && Mouse.isWheelMoving()) {
+		if (Mouse.getWheelDelta() < 0) {
+			camara.zoomOut();
+		} else {
+			camara.zoomIn();
+		}
+	}
 }
 
 /*
@@ -105,13 +228,15 @@ function loop() {
 
 	var tick = elapsedTime();
 
-	//listenToKeyboard(tick);
-	//listenToMouse();
+	renderer.clear();
+
+	listenToKeyboard(tick);
+	listenToMouse();
 
 	//simulador.update();
 	//camaraSeguimiento.update();
 
-	escena.update();  // actualiza todos los modelos
+	escena.update(); // actualiza todos los modelos
 	renderer.render(escena, camara.getPerspectiveCamera());
 	//auto.guardarCaniones(tick);
 }

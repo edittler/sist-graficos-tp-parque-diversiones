@@ -4,7 +4,7 @@ function Piso() {
 
 	var pisoSize = 1000;
 
-	var material = new ColoredMaterial(Color.GREY);
+	var material = new ColoredMaterial(Color.FORESTGREEN);
 	//var material = new TexturedMaterial("images/superficie.jpg");
 	//material.setNormalMap("images/superficie-normalmap.jpg");
 

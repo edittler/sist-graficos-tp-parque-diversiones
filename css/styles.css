@@ -10,7 +10,7 @@ body {
 }
 
 .game {
-	background: #a03131;
+	background-color: dimgrey;
 }
 
 canvas {

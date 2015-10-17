@@ -1,6 +1,8 @@
 var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
 
-var renderer, escena, piso, auto, simulador;
+var renderer, escena, simulador;
+
+var piso, fondo, auto;
 
 var camara, camaraOrbital, camaraSeguimiento, camaraPrimeraPersona;
 
@@ -28,13 +30,15 @@ function init() {
 
 	piso = new Piso();
 
+	fondo = new Fondo();
+	fondo.translateY(200);
 
 	escena = new Scene();
 
 	// habilita la iluminacion
-	ambientColor = 0.1;
+	ambientColor = 0.8;
 	directionalColor = 0.4;
-	spotlightColor = 1.0;
+	spotlightColor = 0.5;
 
 	directionalPosition = [-600, 200, 400];
 	spotlightPosition = [10.0, 0.0, 0.0];

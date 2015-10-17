@@ -21,6 +21,6 @@ Curve.prototype.getControlPoints = function () {
 };
 
 Curve.prototype.getPoints = function (definition) {
-	alert("Error: Abstract method not implemented");
+	console.error("Error: Abstract method not implemented");
 	return;
 };

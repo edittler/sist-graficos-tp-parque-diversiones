@@ -81,7 +81,7 @@ Transformable.prototype.getPosition = function () {
 	// Obtiene la posicion a partir de la matriz de transformaciones
 	var v = vec3.create();
 	var inverse = mat4.create();
-	mat4.invert(inverse, this._objectMatrix);
+	mat4.invert(inverse, this.objectMatrix);
 	vec3.transformMat4(v, v, inverse);
 	vec3.negate(v, v);
 	return v;

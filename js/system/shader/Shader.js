@@ -55,7 +55,7 @@ Shader.prototype.compile = function (gl) {
 
 	// Chequeamos y reportamos si hubo algún error.
 	if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-		alert("An error occurred compiling the shaders: " +
+		console.error("An error occurred compiling the shaders: " +
 			gl.getShaderInfoLog(shader));
 		return null;
 	}

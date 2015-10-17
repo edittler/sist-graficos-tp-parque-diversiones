@@ -409,7 +409,8 @@
 		}
 	</script>
 
-	<!-- Load JavaScript Local -->
+	<!-- JavaScript de sistema WebGL -->
+
 	<script src="js/system/core/Utils.js" defer></script>
 	<script src="js/system/core/Transformable.js" defer></script>
 
@@ -438,12 +439,23 @@
 	<script src="js/system/model/Model.js" defer></script>
 	<script src="js/system/model/PrimitiveModel.js" defer></script>
 
+	<script src="js/system/camera/Camera.js" defer></script>
+	<script src="js/system/camera/PerspectiveCamera.js" defer></script>
+
 	<script src="js/system/core/Scene.js" defer></script>
 	<script src="js/system/core/Renderer.js" defer></script>
+
+	<script src="js/system/goodies/Sprite.js" defer></script>
 
 	<script src="js/system/goodies/shapes/Rectangle.js" defer></script>
 
 	<script src="js/system/goodies/polyhedrons/Box.js" defer></script>
+
+	<!-- JavaScript del TP -->
+
+	<script src="js/tp/camaras/CamaraOrbital.js" defer></script>
+
+	<script src="js/tp/base/Piso.js" defer></script>
 
 	<script src="js/vertex-grid.js" defer></script>
 	<script src="js/app.js" defer></script>
@@ -455,9 +467,6 @@
 <body class="game" onload="start()">
 	<div id="canvas-container">
 	</div>
-	<!--canvas id="glcanvas" width="640" height="480">
-		Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.
-	</canvas-->
 </body>
 
 </html>

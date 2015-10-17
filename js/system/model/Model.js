@@ -31,19 +31,19 @@ Model.prototype.isInitialized = function () {
 
 // Métodos abstractos
 Model.prototype.prepareToRender = function (gl) {
-	alert("Error: Abstract method not implemented");
+	console.error("Error: Abstract method not implemented");
 };
 
 Model.prototype.setRenderMatrixes = function (mMatrix, vMatrix, pMatrix) {
-	alert("Error: Abstract method not implemented");
+	console.error("Error: Abstract method not implemented");
 };
 
 Model.prototype.setLights = function (gl, amb, dir, pos, carLightColor, transformedCarLight, transformedCarLightDirection, cameraPos) {
-	alert("Error: Abstract method not implemented");
+	console.error("Error: Abstract method not implemented");
 };
 
 Model.prototype.draw = function (gl) {
-	alert("Error: Abstract method not implemented");
+	console.error("Error: Abstract method not implemented");
 };
 
 Model.prototype.callUpdate = function (obj) {

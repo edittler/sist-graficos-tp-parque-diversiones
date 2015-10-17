@@ -96,12 +96,12 @@ PrimitiveModel.prototype.init = function (geometry, material) {
 PrimitiveModel.prototype.prepareToRender = function (gl) {
 	this.shaderProgram.init(gl);
 	this.material.prepareMaterial(gl);
-	this.initBuffers(this, gl);
+	this.initBuffers(gl);
 	this.setInitialized(true);
 };
 
 // @override
-PrimitiveModel.setRenderMatrixes = function (mMatrix, vMatrix, pMatrix) {
+PrimitiveModel.prototype.setRenderMatrixes = function (mMatrix, vMatrix, pMatrix) {
 	this.renderMatrixes["Model"] = mat4.clone(mMatrix);
 	this.renderMatrixes["View"] = mat4.clone(vMatrix);
 	this.renderMatrixes["Projection"] = mat4.clone(pMatrix);

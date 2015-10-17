@@ -12,11 +12,11 @@ function BasicColorSP() {
 
 // @override
 BasicColorSP.prototype.init = function (gl) {
-	ShaderProgram.init.call(this, gl);
+	ShaderProgram.prototype.init.call(this, gl);
 
-	this.locateUniform.call(this, gl, "uPMatrix");
-	this.locateUniform.call(this, gl, "uMVMatrix");
+	this.locateUniform(gl, "uPMatrix");
+	this.locateUniform(gl, "uMVMatrix");
 
-	this.locateAttribute.call(this, gl, "aVertexPosition");
-	this.locateAttribute.call(this, gl, "aVertexColor");
+	this.locateAttribute(gl, "aVertexPosition");
+	this.locateAttribute(gl, "aVertexColor");
 };

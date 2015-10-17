@@ -29,8 +29,10 @@ function init() {
 	var bodyCenter = document.getElementById("canvas-container");
 	bodyCenter.appendChild(renderer.getCanvasElement());
 
-
 	// CREAR OBJETOS
+
+	piso = new Piso();
+
 
 	escena = new Scene();
 
@@ -48,14 +50,16 @@ function init() {
 
 	// AGREGAR OBJETOS A LA ESCENA
 
+	escena.add(piso);
+
 	var eyeSeguimiento = vec3.fromValues(-20, 0, 3);
 	var targetSeguimiento = vec3.fromValues(-4, 0, 0);
 	//camaraSeguimiento = new CamaraSeguimiento(auto, eyeSeguimiento, targetSeguimiento, up);
 
 	var eyeOrbital = vec3.fromValues(0,100,20);
 	var targetOrbital= vec3.fromValues(0,0,-10)
-	//camaraOrbital = new CamaraOrbital(eyeOrbital, targetOrbital, up);
-	//camara = camaraOrbital;
+	camaraOrbital = new CamaraOrbital(w, h, eyeOrbital, targetOrbital, up);
+	camara = camaraOrbital;
 
 	var eyePP = vec3.fromValues(0,0,6);
 	var targetPP= vec3.fromValues(3,0,6);

@@ -55,7 +55,13 @@ Scene.prototype.draw = function (gl, camera) {
 	var mMatrix = this.objectMatrix;
 	var vMatrix = camera.getViewMatrix();
 	var pMatrix = camera.getProjectionMatrix();
-	var carMatrix = this.auto.getObjectMatrix();
+
+	var carMatrix;
+	if (this.auto) {
+		carMatrix = this.auto.getObjectMatrix();
+	} else {
+		carMatrix = mat4.create();
+	}
 
 	var pos = camera.getAlignedWithCamera(this.lightPosition);
 	vec3.transformMat4(pos, pos, mMatrix);
@@ -78,14 +84,16 @@ Scene.prototype.draw = function (gl, camera) {
 	vec3.subtract(transformedCarLightDirection, pos2, transformedCarLight);
 	vec3.normalize(transformedCarLightDirection, transformedCarLightDirection);
 
+	var ambient, directional;
 	if (this.hasLight) {
-		var ambient = this.ambientIntensity;
-		var directional = this.directionalIntensity;
+		ambient = this.ambientIntensity;
+		directional = this.directionalIntensity;
 	}
 
 	for (var i = 0; i < models.length; i++) {
-		if (this.hasLight)
+		if (this.hasLight) {
 			models[i].setLights(gl, ambient, directional, pos, this.carLightColor, transformedCarLight, transformedCarLightDirection);
+		}
 		models[i].setRenderMatrixes(mMatrix, vMatrix, pMatrix);
 		models[i].draw(gl);
 	}

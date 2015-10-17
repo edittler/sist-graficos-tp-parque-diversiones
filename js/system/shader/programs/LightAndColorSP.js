@@ -16,7 +16,7 @@ LightAndColorSP.prototype.constructor = LightAndColorSP;
 
 // @override
 LightAndColorSP.prototype.init = function (gl) {
-	ShaderProgram.init.call(this, gl);
+	ShaderProgram.prototype.init.call(this, gl);
 
 	this.locateUniform(gl, "uPMatrix");
 	this.locateUniform(gl, "uMVMatrix");

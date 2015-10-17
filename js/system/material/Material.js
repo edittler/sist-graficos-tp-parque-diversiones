@@ -60,17 +60,17 @@ Material.prototype.drawMaterial = function (gl) {
 };
 
 Material.prototype.genetareMappings = function (levels, faces) {
-	alert("Error: Abstract method not implemented");
+	console.error("Error: Abstract method not implemented");
 };
 
 Material.prototype.getColorMappings = function () {
-	alert("Error: Abstract method not implemented");
+	console.error("Error: Abstract method not implemented");
 };
 
 Material.prototype.getTextureMappings = function () {
-	alert("Error: Abstract method not implemented");
+	console.error("Error: Abstract method not implemented");
 };
 
 Material.prototype.getShaderProgram = function () {
-	alert("Error: Abstract method not implemented");
+	console.error("Error: Abstract method not implemented");
 };

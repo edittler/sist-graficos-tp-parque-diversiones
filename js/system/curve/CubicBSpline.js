@@ -19,5 +19,5 @@ function CubicBSpline(ctrlPoints) {
 	BSplineCurve.call(this, ctrlPoints, this.basis);
 }
 
-CubicBSpline.prototype = Object.create(BSplineCurve);
+CubicBSpline.prototype = Object.create(BSplineCurve.prototype);
 CubicBSpline.prototype.constructor = CubicBSpline;

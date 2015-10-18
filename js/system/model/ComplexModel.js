@@ -39,11 +39,11 @@ ComplexModel.prototype.draw = function (gl) {
 };
 
 // @override
-ComplexModel.prototype.callUpdate = function (obj) {
-	Model.prototype.callUpdate.call(this, obj);
+ComplexModel.prototype.callUpdate = function (obj, elapsedTime) {
+	Model.prototype.callUpdate.call(this, obj, elapsedTime);
 
 	for (var i = 0; i < this.children.length; i++) {
-		this.children[i].callUpdate(this.children[i]);
+		this.children[i].callUpdate(this.children[i], elapsedTime);
 	}
 };
 

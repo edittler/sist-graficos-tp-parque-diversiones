@@ -99,11 +99,11 @@ Scene.prototype.draw = function (gl, camera) {
 	}
 };
 
-Scene.prototype.update = function () {
+Scene.prototype.update = function (elapsedTime) {
 	var models = this.models;
 
 	for (var i = 0; i < models.length; i++) {
-		models[i].callUpdate(models[i]);
+		models[i].callUpdate(models[i], elapsedTime);
 	}
 };
 

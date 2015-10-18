@@ -44,10 +44,10 @@ Model.prototype.draw = function (gl) {
 	console.error("Error: Abstract method not implemented");
 };
 
-Model.prototype.callUpdate = function (obj) {
-	obj.update.call(this);
+Model.prototype.callUpdate = function (obj, elapsedTime) {
+	obj.update.call(this, elapsedTime);
 };
 
-Model.prototype.update = function () {
+Model.prototype.update = function (elapsedTime) {
 	// Se llama en cada ciclo
 };

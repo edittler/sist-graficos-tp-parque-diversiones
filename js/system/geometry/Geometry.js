@@ -17,7 +17,7 @@ function Geometry() {
 
 Geometry.prototype.calculateIndexes = function (levels, faces) {
 	if (levels === 0 || faces === 0) {
-		alert("Error: no se definieron las dimensiones de la geometria");
+		console.error("Error: no se definieron las dimensiones de la geometria");
 		return;
 	}
 

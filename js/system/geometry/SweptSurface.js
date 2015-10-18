@@ -98,7 +98,7 @@ SweptSurface.prototype.prepareGeometry = function (gl) {
 			if (vec3.distance(up, dir) === 0) {
 				// TODO: ver de arreglar este problema. El siguiente link parece util:
 				// http://stackoverflow.com/questions/20923232/how-to-rotate-a-vector-by-a-given-direction
-				alert("Error: el recorrido definido tiene dirección igual al vector Up en algún tramo");
+				console.error("Error: el recorrido definido tiene dirección igual al vector Up en algún tramo");
 				return;
 			}
 

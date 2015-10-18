@@ -35,9 +35,7 @@ function init() {
 
 	vueltaAlMundo = new VueltaAlMundo();
 	vueltaAlMundo.translateX(100);
-	vueltaAlMundo.translateZ(-10);
-	vueltaAlMundo.scale(10);
-	vueltaAlMundo.rotateX(Utils.degToRad(90));
+	vueltaAlMundo.translateZ(40);
 	var normalesVueltaAlMundo = new NormalsGrapher(vueltaAlMundo);
 
 	sillasVoladoras = new SillasVoladoras();
@@ -65,7 +63,7 @@ function init() {
 	escena.add(piso);
 	escena.add(fondo);
 	escena.add(vueltaAlMundo);
-	escena.add(normalesVueltaAlMundo);
+	//escena.add(normalesVueltaAlMundo);
 	escena.add(sillasVoladoras);
 
 	var eyeOrbital = vec3.fromValues(0, 100, 20);
@@ -213,17 +211,17 @@ function elapsedTime() {
 function loop() {
 	requestAnimationFrame(loop);
 
-	var tick = elapsedTime();
+	var time = elapsedTime();
 
 	renderer.clear();
 
-	listenToKeyboard(tick);
+	listenToKeyboard(time);
 	listenToMouse();
 
 	//simulador.update();
 	//camaraSeguimiento.update();
 
-	escena.update(); // actualiza todos los modelos
+	escena.update(time); // actualiza todos los modelos
 	renderer.render(escena, camara.getPerspectiveCamera());
 	//auto.guardarCaniones(tick);
 }

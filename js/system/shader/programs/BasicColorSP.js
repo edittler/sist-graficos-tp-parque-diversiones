@@ -11,7 +11,6 @@ function BasicColorSP() {
 }
 
 BasicColorSP.prototype = Object.create(ShaderProgram.prototype);
-
 BasicColorSP.prototype.constructor = BasicColorSP;
 
 // @override

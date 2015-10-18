@@ -1,7 +1,6 @@
 /*
  * Modelo transformable y renderizable como parte de una escena
  */
-
 function Model() {
 	this.parent; // modelo padre
 
@@ -13,14 +12,13 @@ function Model() {
 }
 
 Model.prototype = Object.create(Transformable.prototype);
-
 Model.prototype.constructor = Model;
 
 // Métodos públicos
 Model.prototype.setInitialized = function (state) {
 	this.initialized = state;
 
-	if (state == false && Utils.isDefined(this.parent)) {
+	if (state === false && Utils.isDefined(this.parent)) {
 		this.parent.setInitialized(false);
 	}
 };

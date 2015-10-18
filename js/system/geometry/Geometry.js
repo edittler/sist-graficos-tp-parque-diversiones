@@ -16,7 +16,7 @@ function Geometry() {
 }
 
 Geometry.prototype.calculateIndexes = function (levels, faces) {
-	if (levels == 0 || faces == 0) {
+	if (levels === 0 || faces === 0) {
 		alert("Error: no se definieron las dimensiones de la geometria");
 		return;
 	}
@@ -67,7 +67,6 @@ Geometry.prototype.calculateNormals = function () {
 
 	// Calcular normales de cada triangulo
 	for (var i = 0; i < this.triangles.length; i++) {
-
 		// Obtengo las coordenadas de cada vertice del triangulo
 		var indexV1 = this.triangles[i][0];
 		var v1x = this.vertices[indexV1 * 3];
@@ -97,15 +96,15 @@ Geometry.prototype.calculateNormals = function () {
 
 		if (this.type == 1 || this.type == 2) {
 
-			if (i % 2 == 0) {
+			if (i % 2 === 0) {
 				// triangulos contra reloj
 				vec3.cross(normal, vector1, vector2);
 			} else {
 				// triangulos a favor del reloj
 				vec3.cross(normal, vector2, vector1);
 			}
-		} else if (this.type == 0) {
-			if (i % 2 == 0) {
+		} else if (this.type === 0) {
+			if (i % 2 === 0) {
 				// triangulos contra reloj
 				vec3.cross(normal, vector2, vector1);
 			} else {
@@ -133,7 +132,7 @@ Geometry.prototype.calculateNormals = function () {
 				this.normals.push(0);
 				this.normals.push(1);
 				this.normals.push(0);
-			} else if (normal[1] == 0) {
+			} else if (normal[1] === 0) {
 				this.normals.push(normal[0]);
 				this.normals.push(normal[1]);
 				this.normals.push(normal[2]);
@@ -189,7 +188,7 @@ Geometry.prototype.getVertices = function () {
 };
 
 Geometry.prototype.getIndexes = function () {
-	if (this.indexes.length == 0) {
+	if (this.indexes.length === 0) {
 		this.calculateIndexes(this.levels, this.faces);
 	}
 
@@ -197,14 +196,14 @@ Geometry.prototype.getIndexes = function () {
 };
 
 Geometry.prototype.getNormals = function () {
-	if (this.normals.length == 0) {
+	if (this.normals.length === 0) {
 		this.calculateNormals();
 	}
 	return this.normals;
 };
 
 Geometry.prototype.getTangents = function () {
-	if (this.tangents.length == 0) {
+	if (this.tangents.length === 0) {
 		var n = this.normals;
 
 		for (var i = 0; i < n.length; i += 3) {

@@ -38,6 +38,7 @@ function init() {
 	vueltaAlMundo.translateZ(-10);
 	vueltaAlMundo.scale(10);
 	vueltaAlMundo.rotateX(Utils.degToRad(90));
+	var normalesVueltaAlMundo = new NormalsGrapher(vueltaAlMundo);
 
 	sillasVoladoras = new SillasVoladoras();
 	sillasVoladoras.translateY(-100);
@@ -64,6 +65,7 @@ function init() {
 	escena.add(piso);
 	escena.add(fondo);
 	escena.add(vueltaAlMundo);
+	escena.add(normalesVueltaAlMundo);
 	escena.add(sillasVoladoras);
 
 	var eyeOrbital = vec3.fromValues(0, 100, 20);

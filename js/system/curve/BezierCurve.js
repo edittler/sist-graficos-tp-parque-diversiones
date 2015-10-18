@@ -7,14 +7,13 @@ function BezierCurve(ctrlPoints, basis) {
 }
 
 BezierCurve.prototype = Object.create(Curve.prototype);
-
 BezierCurve.prototype.constructor = BezierCurve;
 
 BezierCurve.prototype.pointAt = function (u) {
 	var basis = this.basis;
 	var ctrlPoints = this.continuousPoints;
 
-	if (ctrlPoints.length == 0) {
+	if (ctrlPoints.length === 0) {
 		ctrlPoints = this.ctrlPoints;
 	}
 

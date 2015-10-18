@@ -66,8 +66,9 @@ ShaderProgram.prototype.locateAttribute = function (gl, attr) {
 
 ShaderProgram.prototype.locateUniform = function (gl, unif) {
 	var unifLoc = gl.getUniformLocation(this.program, unif);
-	if (Utils.isDefined(unifLoc))
+	if (Utils.isDefined(unifLoc)) {
 		this.assocUniforms[unif] = unifLoc;
+	}
 };
 
 ShaderProgram.prototype.getAttribute = function (attr) {
@@ -80,6 +81,7 @@ ShaderProgram.prototype.getUniform = function (unif) {
 
 ShaderProgram.prototype.associateAttribute = function (buffer, attr) {
 	var attribute = this.assocAttributes[attr];
-	if (Utils.isDefined(attribute))
+	if (Utils.isDefined(attribute)) {
 		buffer.associateAttrPointer(attribute);
+	}
 };

@@ -2,7 +2,6 @@
  * Modelo simple con buffers y shaders asociados. Es un único poliedro.
  * Está definido por una geometría y un material que lo recubre.
  */
-
 function PrimitiveModel(geometry, material, auto) {
 	Model.call(this);
 
@@ -25,7 +24,6 @@ function PrimitiveModel(geometry, material, auto) {
 }
 
 PrimitiveModel.prototype = Object.create(Model.prototype);
-
 PrimitiveModel.prototype.constructor = PrimitiveModel;
 
 PrimitiveModel.RenderMode = Object.freeze({
@@ -102,9 +100,9 @@ PrimitiveModel.prototype.prepareToRender = function (gl) {
 
 // @override
 PrimitiveModel.prototype.setRenderMatrixes = function (mMatrix, vMatrix, pMatrix) {
-	this.renderMatrixes["Model"] = mat4.clone(mMatrix);
-	this.renderMatrixes["View"] = mat4.clone(vMatrix);
-	this.renderMatrixes["Projection"] = mat4.clone(pMatrix);
+	this.renderMatrixes.model = mat4.clone(mMatrix);
+	this.renderMatrixes.view = mat4.clone(vMatrix);
+	this.renderMatrixes.projection = mat4.clone(pMatrix);
 };
 
 // @override
@@ -146,18 +144,19 @@ PrimitiveModel.prototype.draw = function (gl) {
 
 	// Obtiene la matriz Model-View
 	var mvMatrix = mat4.create();
-	mat4.multiply(mvMatrix, matrixes["View"], matrixes["Model"]);
+	mat4.multiply(mvMatrix, matrixes.view, matrixes.model);
 
 	// Multiplica las matrices en el orden correcto
-	for (var i = sceneTwig.length - 1; i >= 0; i--)
+	for (var i = sceneTwig.length - 1; i >= 0; i--) {
 		mat4.multiply(mvMatrix, mvMatrix, sceneTwig[i]);
+	}
 
 	// Setea el programa de shaders dinámicamente para cada modelo
 	var program = this.shaderProgram;
 	program.useThisProgram(gl);
 
 	// asocio la pMatrix con la del shader
-	gl.uniformMatrix4fv(program.getUniform("uPMatrix"), 0, matrixes["Projection"]);
+	gl.uniformMatrix4fv(program.getUniform("uPMatrix"), 0, matrixes.projection);
 
 	// asocio la mvMatrix con la del shader
 	gl.uniformMatrix4fv(program.getUniform("uMVMatrix"), 0, mvMatrix);

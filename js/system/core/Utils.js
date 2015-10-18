@@ -14,5 +14,5 @@ Utils.randomBetween = function (a, b) {
 };
 
 Utils.isDefined = function (val) {
-	return typeof val != 'undefined' && val != null;
+	return typeof val != 'undefined' && val !== null;
 };

@@ -1,7 +1,6 @@
 /*
  * Objeto transformable en el espacio
  */
-
 function Transformable() {
 	this.objectMatrix = mat4.create(); // matriz de transformaciones al objeto
 	this.resetTransformations();
@@ -62,7 +61,7 @@ Transformable.prototype.scaleNonUniform = function (x, y, z) {
 
 Transformable.prototype.applyTransformationMatrix = function (matrix, reset) {
 	// Por defecto resetea transformaciones anteriores
-	if (!Utils.isDefined(reset) || reset == true) {
+	if (!Utils.isDefined(reset) || reset === true) {
 		this.resetTransformations();
 	}
 	// Siempre multiplica a izquierda

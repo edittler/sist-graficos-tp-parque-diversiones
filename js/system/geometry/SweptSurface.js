@@ -19,7 +19,6 @@ function SweptSurface(sweptPath, initialShape) {
 }
 
 SweptSurface.prototype = Object.create(Geometry.prototype);
-
 SweptSurface.prototype.constructor = SweptSurface;
 
 SweptSurface.prototype.init = function (sweptPath, initialShape) {
@@ -70,7 +69,7 @@ SweptSurface.prototype.prepareGeometry = function (gl) {
 	for (var n = 0; n < nodes; n++) {
 		var currPointSpace = mat4.create();
 		var up = [0, 1, 0];
-		var isEnding = this.closedEndings && (n == 0 || n == nodes - 1);
+		var isEnding = this.closedEndings && (n === 0 || n == nodes - 1);
 		var currShapePoints;
 		var currShapeKernel;
 
@@ -96,7 +95,7 @@ SweptSurface.prototype.prepareGeometry = function (gl) {
 				next = last;
 			}
 
-			if (vec3.distance(up, dir) == 0) {
+			if (vec3.distance(up, dir) === 0) {
 				// TODO: ver de arreglar este problema. El siguiente link parece util:
 				// http://stackoverflow.com/questions/20923232/how-to-rotate-a-vector-by-a-given-direction
 				alert("Error: el recorrido definido tiene dirección igual al vector Up en algún tramo");
@@ -125,7 +124,7 @@ SweptSurface.prototype.prepareGeometry = function (gl) {
 				vec3.subtract(vertex, currShapePoints[face], kernel);
 				vec3.transformMat4(vertex, vertex, currPointSpace);
 			} else {
-				var idx = n == 0 ? 0 : path.length - 1;
+				var idx = n === 0 ? 0 : path.length - 1;
 				vec3.subtract(vertex, path[idx], pathKernel);
 			}
 

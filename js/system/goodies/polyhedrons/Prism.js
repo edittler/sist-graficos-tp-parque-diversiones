@@ -12,7 +12,6 @@ function Prism(radius1, radius2, height, faces, material) {
 }
 
 Prism.prototype = Object.create(PrimitiveModel.prototype);
-
 Prism.prototype.constructor = Prism;
 
 // @override

@@ -11,8 +11,8 @@ function PointCloud() {
 PointCloud.prototype.newSection = function (path, at) {
 	var strIndex = at.toFixed(2) + "";
 	this.sections[strIndex] = [];
-	this.sections[strIndex]["points"] = path.getPoints();
-	this.sections[strIndex]["kernel"] = path.getKernelPoint();
+	this.sections[strIndex].points = path.getPoints();
+	this.sections[strIndex].kernel = path.getKernelPoint();
 };
 
 PointCloud.prototype.getSection = function (sectionAt) {
@@ -23,9 +23,9 @@ PointCloud.prototype.getSection = function (sectionAt) {
 		var i1 = parseFloat(keys[i]);
 		var i2 = parseFloat(keys[i + 1]);
 
-		if (i2 <= sectionAt)
+		if (i2 <= sectionAt) {
 			index = i2;
-		else {
+		} else {
 			index = i1;
 			break;
 		}
@@ -37,7 +37,7 @@ PointCloud.prototype.getSection = function (sectionAt) {
 PointCloud.prototype.addSection = function (path, at) {
 	var initial = this.getSection(0);
 	if (Utils.isDefined(initial)) {
-		if (path.getPoints().length != initial["points"].length) {
+		if (path.getPoints().length != initial.points.length) {
 			alert("Error: la sección adicional debe tener la misma cantidad de puntos que la inicial");
 			return;
 		}
@@ -52,11 +52,11 @@ PointCloud.prototype.addSection = function (path, at) {
 };
 
 PointCloud.prototype.getSectionPoints = function (sectionAt) {
-	return this.getSection(sectionAt)["points"];
+	return this.getSection(sectionAt).points;
 };
 
 PointCloud.prototype.getSectionKernel = function (sectionAt) {
-	return this.getSection(sectionAt)["kernel"];
+	return this.getSection(sectionAt).kernel;
 };
 
 PointCloud.prototype.getKernelPoint = function () {
@@ -64,7 +64,7 @@ PointCloud.prototype.getKernelPoint = function () {
 
 	var kernel = vec3.create();
 	for (var i = 0; i < keys.length - 1; i++) {
-		vec3.add(kernel, kernel, this.sections[keys[i]]["kernel"]);
+		vec3.add(kernel, kernel, this.sections[keys[i]].kernel);
 	}
 	vec3.scale(kernel, kernel, 1 / keys.length);
 

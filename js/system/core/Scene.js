@@ -19,14 +19,14 @@ function Scene() {
 }
 
 Scene.prototype = Object.create(Transformable.prototype);
-
 Scene.prototype.constructor = Scene;
 
 Scene.prototype.prepareModels = function (gl) {
 	var models = this.models;
 	for (var i = 0; i < models.length; i++) {
-		if (!models[i].isInitialized())
+		if (!models[i].isInitialized()) {
 			models[i].prepareToRender(gl);
+		}
 	}
 };
 

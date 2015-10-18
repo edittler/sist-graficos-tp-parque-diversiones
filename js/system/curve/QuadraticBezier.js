@@ -21,7 +21,6 @@ function QuadraticBezier(ctrlPoints) {
 }
 
 QuadraticBezier.prototype = Object.create(BezierCurve.prototype);
-
 QuadraticBezier.prototype.constructor = QuadraticBezier;
 
 QuadraticBezier.prototype.calculateContinuousPoints = function () {

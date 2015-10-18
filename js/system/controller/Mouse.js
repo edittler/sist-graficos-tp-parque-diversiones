@@ -33,7 +33,7 @@ var Mouse = {
 	},
 
 	isMoving: function () {
-		return Mouse._deltaX != 0 || Mouse._deltaY != 0;
+		return Mouse._deltaX !== 0 || Mouse._deltaY !== 0;
 	},
 
 	getDeltaX: function () {
@@ -49,7 +49,7 @@ var Mouse = {
 	},
 
 	isWheelMoving: function () {
-		return Mouse._wheelDelta != 0;
+		return Mouse._wheelDelta !== 0;
 	},
 
 	getWheelDelta: function () {

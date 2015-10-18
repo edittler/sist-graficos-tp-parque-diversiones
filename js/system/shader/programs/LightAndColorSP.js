@@ -11,7 +11,6 @@ function LightAndColorSP() {
 }
 
 LightAndColorSP.prototype  = Object.create(ShaderProgram.prototype);
-
 LightAndColorSP.prototype.constructor = LightAndColorSP;
 
 // @override

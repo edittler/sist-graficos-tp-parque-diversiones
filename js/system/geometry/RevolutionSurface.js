@@ -18,7 +18,6 @@ function RevolutionSurface(initialSideForm, faces) {
 }
 
 RevolutionSurface.prototype = Object.create(Geometry.prototype);
-
 RevolutionSurface.prototype.constructor = RevolutionSurface;
 
 RevolutionSurface.prototype.init = function (initialSideForm, faces) {
@@ -67,7 +66,7 @@ RevolutionSurface.prototype.prepareGeometry = function () {
 
 		for (var n = 0; n < nodes; n++) {
 			var vertex = vec3.create();
-			var isEnding = this.closedEndings && (n == 0 || n == nodes - 1);
+			var isEnding = this.closedEndings && (n === 0 || n === nodes - 1);
 			var kernel = this.centerInKernel ? currSideFormKernel : cloudPointKernel;
 
 			if (!isEnding) {
@@ -75,7 +74,7 @@ RevolutionSurface.prototype.prepareGeometry = function () {
 				var ykernel = vec3.fromValues(0, kernel[1], 0);
 				vec3.subtract(vertex, currSideFormPoints[node], ykernel);
 			} else {
-				var idx = n == 0 ? 0 : nodes - 3;
+				var idx = n === 0 ? 0 : nodes - 3;
 				vec3.set(vertex, 0, currSideFormPoints[idx][1] - kernel[1], 0);
 			}
 

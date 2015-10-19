@@ -35,7 +35,6 @@ function init() {
 
 	vueltaAlMundo = new VueltaAlMundo();
 	vueltaAlMundo.translateX(100);
-	vueltaAlMundo.translateZ(50);
 
 	sillasVoladoras = new SillasVoladoras();
 	sillasVoladoras.translateY(-100);

@@ -5,7 +5,7 @@ function CamaraOrbital(width, height, eye, target, up) {
 	this.camara.setTarget(target[0], target[1], target[2]);
 
 	this.factorRotacion = 5;
-	this.factorZoom = 1.2;
+	this.factorZoom = 1.05;
 }
 
 CamaraOrbital.prototype.signo = function (n) {

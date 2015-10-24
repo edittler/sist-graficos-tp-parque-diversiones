@@ -20,10 +20,10 @@ SoporteGiratorio.prototype = (function () {
         pu.addChild.call(this, this._soporte);
 
         rotation = 90;
-        for(var i=0; i<6; i++) {
-            silla = new Silla();
+        for(var i=0; i<8; i++) {
+            silla = new Silla(8);
             silla.rotateY(Utils.degToRad(rotation));
-            silla.translateZ(5);
+            silla.translateZ(50);
             rotation = rotation + 45;
             pu.addChild.call(this, silla);            
         }
@@ -31,3 +31,10 @@ SoporteGiratorio.prototype = (function () {
 
     return pu;
 })();
+
+//@override
+SoporteGiratorio.prototype.update = function(elapsedTime) {
+    ComplexModel.prototype.update.call(this, elapsedTime);
+    this.rotateX(Utils.degToRad(elapsedTime/200));
+    this.rotateY(Utils.degToRad(elapsedTime/80));
+};

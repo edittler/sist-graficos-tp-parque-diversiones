@@ -20,7 +20,7 @@ SillasVoladoras.prototype = (function () {
         this._base = new Base();
         
         this._soporteGiratorio = new SoporteGiratorio();
-        this._soporteGiratorio.translateY(8.5);
+        this._soporteGiratorio.translateY(80);
 
         pu.addChild.call(this, this._base);
         pu.addChild.call(this,  this._soporteGiratorio);

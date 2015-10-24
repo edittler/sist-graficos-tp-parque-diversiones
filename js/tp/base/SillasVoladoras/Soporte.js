@@ -15,7 +15,7 @@ Soporte.prototype = (function() {
 
         var side = new Path(10);
         side.addStretch(new LinearCurve([
-            [1,0], [6,1], [6,2], 
+            [10,0], [60,10], [60,20], 
         ]));
 
         var geometry = new RevolutionSurface(side, 30);

@@ -39,7 +39,6 @@ function init() {
 	sillasVoladoras = new SillasVoladoras();
 	sillasVoladoras.translateY(-100);
 	sillasVoladoras.translateZ(-10);
-	sillasVoladoras.scale(8);
 	sillasVoladoras.rotateX(Utils.degToRad(90));
 
 	escena = new Scene();

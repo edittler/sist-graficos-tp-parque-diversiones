@@ -18,13 +18,20 @@ SoporteGiratorio.prototype = (function () {
 
         this._soporte = new Soporte();
 
+        var techo = new Polygon(new Circle(60), Color.RED);
+        techo.translateY(20);
+        techo.rotateX(Utils.degToRad(90));
+
         pu.addChild.call(this, this._soporte);
+        pu.addChild.call(this, techo);
 
         rotation = 90;
         for(var i=0; i<8; i++) {
             silla = new Silla(8);
             silla.rotateY(Utils.degToRad(rotation));
             silla.translateZ(50);
+            silla.translateY(15);
+            silla.rotateX(-Utils.degToRad(15));
             rotation = rotation + 45;
             pu.addChild.call(this, silla);            
         }
@@ -40,8 +47,8 @@ SoporteGiratorio.prototype = (function () {
 //@override
 SoporteGiratorio.prototype.update = function(elapsedTime) {
     ComplexModel.prototype.update.call(this, elapsedTime);
-    this.rotateX(Utils.degToRad(this._orientation * elapsedTime/200));
     this.rotateY(Utils.degToRad(elapsedTime/80));
+    this.rotateX(Utils.degToRad(this._orientation * elapsedTime/200));
     if(this._timePass >= 5000) {
         this._timePass = 0;
         this._orientation = this._orientation * -1;

@@ -3,6 +3,7 @@
  */
 function SoporteGiratorio() {
     this._soporte;
+    this._orientation;
 
     this.constructor();
 }
@@ -27,6 +28,10 @@ SoporteGiratorio.prototype = (function () {
             rotation = rotation + 45;
             pu.addChild.call(this, silla);            
         }
+
+        this._timePass = 2500;
+        this._orientation = 1;
+
     }
 
     return pu;
@@ -35,6 +40,12 @@ SoporteGiratorio.prototype = (function () {
 //@override
 SoporteGiratorio.prototype.update = function(elapsedTime) {
     ComplexModel.prototype.update.call(this, elapsedTime);
-    this.rotateX(Utils.degToRad(elapsedTime/200));
+    this.rotateX(Utils.degToRad(this._orientation * elapsedTime/200));
     this.rotateY(Utils.degToRad(elapsedTime/80));
+    if(this._timePass >= 5000) {
+        this._timePass = 0;
+        this._orientation = this._orientation * -1;
+    } else {
+        this._timePass = this._timePass + elapsedTime;
+    }
 };

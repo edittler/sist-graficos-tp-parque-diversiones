@@ -2,7 +2,7 @@ var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
 
 var renderer, escena, simulador;
 
-var piso, fondo, vueltaAlMundo, sillasVoladoras, auto;
+var piso, fondo, vueltaAlMundo, sillasVoladoras, montaniaRusa, auto;
 
 var camara, camaraOrbital, camaraPrimeraPersona, camaraSeguimiento;
 
@@ -41,6 +41,10 @@ function init() {
 	sillasVoladoras.translateZ(-10);
 	sillasVoladoras.rotateX(Utils.degToRad(90));
 
+	montaniaRusa = new MontaniaRusa();
+	montaniaRusa.translateX(-150);
+	montaniaRusa.translateY(100);
+
 	escena = new Scene();
 
 	// habilita la iluminacion
@@ -61,6 +65,7 @@ function init() {
 	escena.add(fondo);
 	escena.add(vueltaAlMundo);
 	escena.add(sillasVoladoras);
+	escena.add(montaniaRusa);
 
 	var eyeOrbital = vec3.fromValues(0, 100, 20);
 	var targetOrbital = vec3.fromValues(0, 0, -10);

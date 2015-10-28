@@ -28,16 +28,7 @@ function Cabina(velocidadDeGiro, color) {
 		columna.translateX(posX);
 		columna.translateY(posY);
 		columna.rotateY(Utils.degToRad(angulo));
-		var complexModel = new ComplexModel();
-		complexModel.addChild(columna);
-		var axis = new Axis();
-		axis.translateZ(posZ);
-		axis.translateX(posX);
-		axis.translateY(posY);
-		axis.rotateY(Utils.degToRad(angulo));
-		complexModel.addChild(axis);
-		//return columna;
-		return complexModel;
+		return columna;
 	};
 	var anchoColumna = 2;
 	var altoColumna = 10;
@@ -74,9 +65,6 @@ function Cabina(velocidadDeGiro, color) {
 	this.addChild(this.columna4);
 	this.addChild(this.paredesInferiores);
 	this.addChild(this.piso);
-	var axis = new Axis();
-	axis.scale(20);
-	this.addChild(axis);
 }
 
 Cabina.prototype = Object.create(ComplexModel.prototype);

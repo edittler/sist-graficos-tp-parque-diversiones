@@ -1,10 +1,10 @@
 /*
  * Pared perimetral para la cabina
  */
-function ParedCabina(espesor, ancho, largo, alto, material) {
+function ColumnaCabina(espesor, ancho, alto, material) {
 	PrimitiveModel.call(this);
 
-	var path = [[0, 0, 0], [0, 0, ancho], [largo, 0, ancho], [largo, 0, 0], [0, 0, 0]];
+	var path = [[ancho, 0, 0], [0, 0, 0], [0, 0, ancho]];
 	var forma = new Rectangle(espesor, alto);
 
 	var recorrido = new Path(1);
@@ -15,10 +15,10 @@ function ParedCabina(espesor, ancho, largo, alto, material) {
 	geometry.setClosedEndings(true);
 
 	this.init(geometry, material);
-	this.translateX(-espesor * 4);
-	this.translateZ(-espesor * 4);
+	//this.translateX(ancho/2 - espesor*2);
+	//this.translateZ(ancho/2 - espesor*2);
 }
 
-ParedCabina.prototype = Object.create(PrimitiveModel.prototype);
+ColumnaCabina.prototype = Object.create(PrimitiveModel.prototype);
 
-ParedCabina.prototype.constructor = ParedCabina;
+ColumnaCabina.prototype.constructor = ColumnaCabina;

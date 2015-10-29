@@ -2,7 +2,7 @@ var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
 
 var renderer, escena, simulador;
 
-var piso, fondo, vueltaAlMundo, sillasVoladoras, montaniaRusa, auto;
+var piso, fondo, vueltaAlMundo, sillasVoladoras, montaniaRusa, carro;
 
 var camara, camaraOrbital, camaraPrimeraPersona, camaraSeguimiento;
 
@@ -45,6 +45,8 @@ function init() {
 	montaniaRusa.translateX(-150);
 	montaniaRusa.translateY(100);
 
+	carro = new Carro();
+
 	escena = new Scene();
 
 	// habilita la iluminacion
@@ -56,7 +58,7 @@ function init() {
 	spotlightPosition = [10.0, 0.0, 0.0];
 	spotlightDirection = [1.0, 0.0, -0.7]; // TODO deberia ser -1,0,0
 
-	//escena.setAuto(auto);
+	escena.setAuto(carro);
 	escena.setLightSources(ambientColor, directionalColor, directionalPosition, spotlightColor, spotlightPosition, spotlightDirection);
 
 	// AGREGAR OBJETOS A LA ESCENA
@@ -66,6 +68,7 @@ function init() {
 	escena.add(vueltaAlMundo);
 	escena.add(sillasVoladoras);
 	escena.add(montaniaRusa);
+	escena.add(carro);
 
 	var eyeOrbital = vec3.fromValues(0, 100, 20);
 	var targetOrbital = vec3.fromValues(0, 0, -10);
@@ -76,9 +79,9 @@ function init() {
 	var targetPP = vec3.fromValues(3, 0, 6);
 	camaraPrimeraPersona = new CamaraPrimeraPersona(w, h, eyePP, targetPP, up);
 
-	var eyeSeguimiento = vec3.fromValues(-20, 0, 3);
-	var targetSeguimiento = vec3.fromValues(-4, 0, 0);
-	//camaraSeguimiento = new CamaraSeguimiento(auto, eyeSeguimiento, targetSeguimiento, up);
+	var eyeSeguimiento = vec3.fromValues(0, 0, 10);
+	var targetSeguimiento = vec3.fromValues(20, 0, 0);
+	camaraSeguimiento = new CamaraSeguimiento(carro, w, h, eyeSeguimiento, targetSeguimiento, up);
 }
 
 function listenToKeyboard(tick) {

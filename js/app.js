@@ -43,7 +43,7 @@ function init() {
 
 	montaniaRusa = new MontaniaRusa();
 	montaniaRusa.translateX(-150);
-	montaniaRusa.translateY(100);
+	montaniaRusa.translateY(200);
 
 	carro = new Carro();
 

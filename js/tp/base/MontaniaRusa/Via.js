@@ -22,7 +22,7 @@ Via.prototype = (function() {
         geometry.setClosedShapes(false);
         geometry.setClosedEndings(false);
 
-        pu.init.call(this, geometry, new ColoredMaterial(Color.ORANGE));
+        pu.init.call(this, geometry, new ColoredMaterial(Color.GREY));
     }
 
     // Métodos privados

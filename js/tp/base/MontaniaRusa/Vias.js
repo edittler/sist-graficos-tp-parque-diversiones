@@ -2,19 +2,19 @@
  * Vias
  */
 function Vias(path) {
-	PrimitiveModel.call(this);
+	ComplexModel.call(this);
 
-	var circulo = new Circle(1.5);
+	var via1 = new Via(path);
+	via1.translate(-104, -60, -8);
+	via1.rotateX(Utils.degToRad(90));
 
-	var recorrido = new Path(8);
-	recorrido.addStretch(new CubicBSpline(path));
+	via2 = new Via(path);
+    via2.translate(-90, -60, -8);
+    via2.rotateX(Utils.degToRad(90));
 
-	var geometry = new SweptSurface(recorrido, circulo);
-	geometry.setClosedShapes(false);
-	geometry.setClosedEndings(false);
-
-	this.init(geometry, new ColoredMaterial(Color.GREY));
+	this.addChild(via1);
+	this.addChild(via2);
 }
 
-Vias.prototype = Object.create(PrimitiveModel.prototype);
+Vias.prototype = Object.create(ComplexModel.prototype);
 Vias.prototype.constructor = Vias;

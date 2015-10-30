@@ -37,7 +37,7 @@ CamaraSeguimiento.prototype.rotate = function (rotateY, rotateZ) {
 };
 
 CamaraSeguimiento.prototype.update = function () {
-	var matrizTransformacion = this.objetoASeguir._objectMatrix;
+	var matrizTransformacion = this.objetoASeguir.objectMatrix;
 	var newEye = this.transformarEye(matrizTransformacion);
 	var newTarget = this.transformarTarget(matrizTransformacion);
 	this.camara.setPosition(newEye[0], newEye[1], newEye[2]);

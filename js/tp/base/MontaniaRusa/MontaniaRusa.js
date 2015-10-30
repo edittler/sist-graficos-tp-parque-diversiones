@@ -30,6 +30,7 @@ function MontaniaRusa() {
     // ];
 
 	this.vias = new Vias(puntosControl);
+	this.carro = new Carro(puntosControl);
 
 	var axis = new Axis();
 	axis.scale(30);
@@ -40,3 +41,7 @@ function MontaniaRusa() {
 
 MontaniaRusa.prototype = Object.create(ComplexModel.prototype);
 MontaniaRusa.prototype.constructor = MontaniaRusa;
+
+MontaniaRusa.prototype.getCarro = function () {
+	return this.carro;
+};

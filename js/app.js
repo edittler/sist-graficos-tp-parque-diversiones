@@ -45,8 +45,6 @@ function init() {
 	montaniaRusa.translateX(-150);
 	montaniaRusa.translateY(200);
 
-	carro = new Carro();
-
 	escena = new Scene();
 
 	// habilita la iluminacion
@@ -58,7 +56,7 @@ function init() {
 	spotlightPosition = [10.0, 0.0, 0.0];
 	spotlightDirection = [1.0, 0.0, -0.7]; // TODO deberia ser -1,0,0
 
-	escena.setAuto(carro);
+	escena.setAuto(montaniaRusa.getCarro());
 	escena.setLightSources(ambientColor, directionalColor, directionalPosition, spotlightColor, spotlightPosition, spotlightDirection);
 
 	// AGREGAR OBJETOS A LA ESCENA
@@ -68,7 +66,7 @@ function init() {
 	escena.add(vueltaAlMundo);
 	escena.add(sillasVoladoras);
 	escena.add(montaniaRusa);
-	escena.add(carro);
+	escena.add(montaniaRusa.getCarro());
 
 	var eyeOrbital = vec3.fromValues(0, 100, 20);
 	var targetOrbital = vec3.fromValues(0, 0, -10);
@@ -81,7 +79,7 @@ function init() {
 
 	var eyeSeguimiento = vec3.fromValues(0, 0, 10);
 	var targetSeguimiento = vec3.fromValues(20, 0, 0);
-	camaraSeguimiento = new CamaraSeguimiento(carro, w, h, eyeSeguimiento, targetSeguimiento, up);
+	camaraSeguimiento = new CamaraSeguimiento(montaniaRusa.getCarro(), w, h, eyeSeguimiento, targetSeguimiento, up);
 }
 
 function listenToKeyboard(tick) {
@@ -111,48 +109,6 @@ function listenToKeyboard(tick) {
 	} else if (Keyboard.isKeyPressed(Keyboard.A)) {
 		camaraPrimeraPersona.trasladarIzquierda(camaraVel);
 	}
-
-	/*
-	var torretaVel = 0.01;
-
-	if (Keyboard.isKeyPressed(Keyboard.V)) {
-		auto.girarTorretaHorizontal(-torretaVel);
-	} else if (Keyboard.isKeyPressed(Keyboard.N)) {
-		auto.girarTorretaHorizontal(torretaVel);
-	}
-
-	if (Keyboard.isKeyPressed(Keyboard.G)) {
-		auto.girarTorretaVertical(-torretaVel);
-	} else if (Keyboard.isKeyPressed(Keyboard.B)) {
-		auto.girarTorretaVertical(torretaVel);
-	}
-
-	if (Keyboard.isKeyPressed(Keyboard.SPACE)) {
-		auto.dispararCaniones(tick);
-	}
-
-	// luz
-	if (Keyboard.isKeyPressed(Keyboard.Z, true)) {
-		spotlightColor = spotlightColor > 0 ? 0.0 : 1.0;
-		escena.setLightSources(ambientColor, directionalColor, directionalPosition, spotlightColor, spotlightPosition, spotlightDirection);
-	}
-
-	if (Keyboard.isKeyPressed(Keyboard.P)) {
-		spotlightColor += 0.05;
-		if (spotlightColor > 1.0) {
-			spotlightColor = 1.0;
-		}
-		escena.setLightSources(ambientColor, directionalColor, directionalPosition, spotlightColor, spotlightPosition, spotlightDirection);
-	}
-
-	if (Keyboard.isKeyPressed(Keyboard.O)) {
-		spotlightColor -= 0.05;
-		if (spotlightColor < 0) {
-			spotlightColor = 0;
-		}
-		escena.setLightSources(ambientColor, directionalColor, directionalPosition, spotlightColor, spotlightPosition, spotlightDirection);
-	}
-	*/
 }
 
 function listenToMouse() {
@@ -222,10 +178,9 @@ function loop() {
 	listenToKeyboard(time);
 	listenToMouse();
 
-	//simulador.update();
-	//camaraSeguimiento.update();
-
 	escena.update(time); // actualiza todos los modelos
+	if (camara === camaraSeguimiento) {
+		camaraSeguimiento.update();
+	}
 	renderer.render(escena, camara.getPerspectiveCamera());
-	//auto.guardarCaniones(tick);
 }

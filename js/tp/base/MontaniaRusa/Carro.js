@@ -24,6 +24,7 @@ function Carro(path) {
 
 	this.frame = 0;
 	this.velocidad = 0.01;
+	this.distanciaRecorrida = 0;
 }
 
 Carro.prototype = Object.create(ComplexModel.prototype);
@@ -40,8 +41,11 @@ Carro.prototype.update = function (elapsedTime) {
 	var beta = alfa * 4;
 
 	// calculo posicion sobre la curva
-	var pos = vec3.create();
-	vec3.set(pos, 40 * Math.sin(alfa), 10 * Math.sin(beta), 40 * Math.cos(alfa));
+	//var pos = vec3.create();
+	this.distanciaRecorrida += (elapsedTime / 100) * this.velocidad;
+	var point = this.curva.pointAt(this.distanciaRecorrida, 1);
+	var pos = vec3.fromValues(point[0],point[1],point[2]);
+	//vec3.set(pos, 40 * Math.sin(alfa), 10 * Math.sin(beta), 40 * Math.cos(alfa));
 
 	// calculo tangente de la curva
 	var tan = vec3.create();

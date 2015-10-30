@@ -36,6 +36,7 @@ function MontaniaRusa() {
 	axis.scale(30);
 
 	this.addChild(this.vias);
+	//this.addChild(this.carro);
 	this.addChild(axis);
 }
 

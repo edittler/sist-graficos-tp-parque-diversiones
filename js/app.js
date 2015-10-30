@@ -66,7 +66,6 @@ function init() {
 	escena.add(vueltaAlMundo);
 	escena.add(sillasVoladoras);
 	escena.add(montaniaRusa);
-	escena.add(montaniaRusa.getCarro());
 
 	var eyeOrbital = vec3.fromValues(0, 100, 20);
 	var targetOrbital = vec3.fromValues(0, 0, -10);

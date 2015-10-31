@@ -21,7 +21,7 @@ function Vias(path) {
 	via2.translate(-100, -60, 50);
 
 	var via3 = new Via(path, 0.5, Color.GREY);
-    via3.translate(-95, -65, 47);
+	//via3.translate(-95, -65, 47);
 
 	// this.addChild(via1);
 	// this.addChild(via2);

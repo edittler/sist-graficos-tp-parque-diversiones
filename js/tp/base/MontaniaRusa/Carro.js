@@ -5,6 +5,7 @@ function Carro(path) {
 	ComplexModel.call(this);
 
 	this.curva = new CubicBSpline(path);
+	this.puntos = this.curva.getPoints(20);
 	this.recorrido = new Path(8);
 	this.recorrido.addStretch(this.curva);
 
@@ -41,11 +42,10 @@ Carro.prototype.update = function (elapsedTime) {
 	var beta = alfa * 4;
 
 	// calculo posicion sobre la curva
-	//var pos = vec3.create();
-	this.distanciaRecorrida += (elapsedTime / 100) * this.velocidad;
-	var point = this.curva.pointAt(this.distanciaRecorrida, 1);
+	this.distanciaRecorrida += (elapsedTime) * this.velocidad;
+	var modDistancia = Math.floor(this.distanciaRecorrida) % this.puntos.length;
+	var point = this.puntos[modDistancia];
 	var pos = vec3.fromValues(point[0],point[1],point[2]);
-	//vec3.set(pos, 40 * Math.sin(alfa), 10 * Math.sin(beta), 40 * Math.cos(alfa));
 
 	// calculo tangente de la curva
 	var tan = vec3.create();

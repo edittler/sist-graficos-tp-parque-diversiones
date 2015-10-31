@@ -6,7 +6,7 @@ function Model() {
 
 	this.initialized; // informa si está listo para renderizarse
 
-	Transformable.prototype.constructor.call(this);
+	Transformable.call(this);
 
 	this.setInitialized(false);
 }
@@ -28,19 +28,19 @@ Model.prototype.isInitialized = function () {
 };
 
 // Métodos abstractos
-Model.prototype.prepareToRender = function (gl) {
+Model.prototype.prepareToRender = function (gl) { // jshint ignore:line
 	console.error("Error: Abstract method not implemented");
 };
 
-Model.prototype.setRenderMatrixes = function (mMatrix, vMatrix, pMatrix) {
+Model.prototype.setRenderMatrixes = function (mMatrix, vMatrix, pMatrix) { // jshint ignore:line
 	console.error("Error: Abstract method not implemented");
 };
 
-Model.prototype.setLights = function (gl, amb, dir, pos, carLightColor, transformedCarLight, transformedCarLightDirection, cameraPos) {
+Model.prototype.setLights = function (gl, amb, dir, pos, carLightColor, transformedCarLight, transformedCarLightDirection, cameraPos) { // jshint ignore:line
 	console.error("Error: Abstract method not implemented");
 };
 
-Model.prototype.draw = function (gl) {
+Model.prototype.draw = function (gl) { // jshint ignore:line
 	console.error("Error: Abstract method not implemented");
 };
 
@@ -48,6 +48,6 @@ Model.prototype.callUpdate = function (obj, elapsedTime) {
 	obj.update.call(this, elapsedTime);
 };
 
-Model.prototype.update = function (elapsedTime) {
+Model.prototype.update = function (elapsedTime) { // jshint ignore:line
 	// Se llama en cada ciclo
 };

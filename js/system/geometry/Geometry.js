@@ -60,13 +60,16 @@ Geometry.prototype.calculateNormals = function () {
 	// Normales de cada vertice, se inicializan en 0,0,0
 	var vertexNormals = [];
 
-	for (var i = 0; i < this.indexes.length; i++) {
+	var i;
+
+	for (i = 0; i < this.indexes.length; i++) {
 		var zero = vec3.fromValues(0, 0, 0);
 		vertexNormals.push(zero);
 	}
 
+	var normal;
 	// Calcular normales de cada triangulo
-	for (var i = 0; i < this.triangles.length; i++) {
+	for (i = 0; i < this.triangles.length; i++) {
 		// Obtengo las coordenadas de cada vertice del triangulo
 		var indexV1 = this.triangles[i][0];
 		var v1x = this.vertices[indexV1 * 3];
@@ -88,7 +91,7 @@ Geometry.prototype.calculateNormals = function () {
 
 		var vector1 = vec3.create();
 		var vector2 = vec3.create();
-		var normal = vec3.create();
+		normal = vec3.create();
 
 		// Calculo la normal
 		vec3.subtract(vector1, v2, v1);
@@ -124,8 +127,8 @@ Geometry.prototype.calculateNormals = function () {
 	}
 
 	if (this.type == 2) {
-		for (var i = 0; i < vertexNormals.length; i++) {
-			var normal = vertexNormals[i];
+		for (i = 0; i < vertexNormals.length; i++) {
+			normal = vertexNormals[i];
 
 			vec3.normalize(normal, normal);
 			if (normal[1] > 0) {
@@ -141,12 +144,11 @@ Geometry.prototype.calculateNormals = function () {
 				this.normals.push(-1);
 				this.normals.push(0);
 			}
-
 		}
 	} else {
 		// Normalizar normales de cada vertice
-		for (var i = 0; i < vertexNormals.length; i++) {
-			var normal = vertexNormals[i];
+		for (i = 0; i < vertexNormals.length; i++) {
+			normal = vertexNormals[i];
 
 			vec3.normalize(normal, normal);
 

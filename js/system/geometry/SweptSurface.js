@@ -46,7 +46,7 @@ SweptSurface.prototype.addShape = function (shape, at) {
 };
 
 // @override
-SweptSurface.prototype.prepareGeometry = function (gl) {
+SweptSurface.prototype.prepareGeometry = function () {
 	var shapes = this.shapes;
 	var cloudPointKernel = shapes.getKernelPoint();
 

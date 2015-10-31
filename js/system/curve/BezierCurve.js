@@ -1,7 +1,7 @@
 /*
  * Curva tipo Bezier
  */
-function BezierCurve(ctrlPoints, basis) {
+function BezierCurve(ctrlPoints, basis) { // jshint ignore:line
 	Curve.call(this, ctrlPoints, this.basis);
 	this.continuousPoints = []; // puntos para que los tramos queden continuos
 }

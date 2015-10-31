@@ -10,7 +10,7 @@ function SoporteGiratorio() {
 
 //Metodos
 SoporteGiratorio.prototype = (function () {
-    var pr = {};
+    var pr = {}; // jshint ignore:line
     var pu = Object.create(ComplexModel.prototype);  // extiende ComplexModel
 
     pu.constructor = function() {
@@ -25,21 +25,21 @@ SoporteGiratorio.prototype = (function () {
         pu.addChild.call(this, this._soporte);
         pu.addChild.call(this, techo);
 
-        rotation = 90;
+        var rotation = 90;
         for(var i=0; i<8; i++) {
-            silla = new Silla(8);
+            var silla = new Silla(8);
             silla.rotateY(Utils.degToRad(rotation));
             silla.translateZ(50);
             silla.translateY(15);
             silla.rotateX(-Utils.degToRad(15));
             rotation = rotation + 45;
-            pu.addChild.call(this, silla);            
+            pu.addChild.call(this, silla);
         }
 
         this._timePass = 2500;
         this._orientation = 1;
 
-    }
+    };
 
     return pu;
 })();

@@ -7,7 +7,7 @@ function Via( path , ratio, color) {
 
 // Métodos
 Via.prototype = (function() {
-    var pr = {};
+    var pr = {}; // jshint ignore:line
     var pu = Object.create(PrimitiveModel.prototype);
 
     pu.constructor = function( path , ratio, color) {
@@ -23,7 +23,7 @@ Via.prototype = (function() {
         geometry.setClosedEndings(false);
 
         pu.init.call(this, geometry, new ColoredMaterial(color));
-    }
+    };
 
     // Métodos privados
 

@@ -7,7 +7,7 @@ function Soporte() {
 
 // Métodos
 Soporte.prototype = (function() {
-    var pr = {};
+    var pr = {}; // jshint ignore:line
     var pu = Object.create(PrimitiveModel.prototype);
 
     pu.constructor = function() {
@@ -15,7 +15,7 @@ Soporte.prototype = (function() {
 
         var side = new Path(10);
         side.addStretch(new LinearCurve([
-            [10,0], [60,10], [60,20], 
+            [10,0], [60,10], [60,20],
         ]));
 
         var geometry = new RevolutionSurface(side, 30);
@@ -26,7 +26,7 @@ Soporte.prototype = (function() {
 
         pu.init.call(this, geometry, material);
         
-    }
+    };
     
     return pu;
 })();

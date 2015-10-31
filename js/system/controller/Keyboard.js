@@ -48,8 +48,9 @@ var Keyboard = {
   
     isKeyPressed: function(keyCode, singleInput) {
         var pressed = this._pressed[keyCode];
-        if(Utils.isDefined(singleInput) && singleInput)
+        if(Utils.isDefined(singleInput) && singleInput) {
             delete this._pressed[keyCode];
+        }
         return pressed;
     },
 
@@ -67,7 +68,7 @@ var Keyboard = {
 window.addEventListener('keyup', function(event) { Keyboard.onKeyup(event); }, false);
 window.addEventListener('keydown', function(event) { Keyboard.onKeydown(event); }, false);
 
-/* 
+/*
 Sacada idea de acá:
 http://nokarma.org/2011/02/27/javascript-game-development-keyboard-input/
 */

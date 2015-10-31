@@ -5,12 +5,13 @@ function Vias(path) {
 	ComplexModel.call(this);
 
 	var path2 = path.slice();
-	for (var c = 0; c < path2.length; c++) {
+	var c;
+	for (c = 0; c < path2.length; c++) {
 		path2[c] = [ path2[c][0] * 1.5, path2[c][1] * 1.1, path2[c][2] ];
 	}
 
 	var path1 = path.slice();
-	for (var c = 0; c < path1.length; c++) {
+	for (c = 0; c < path1.length; c++) {
 		path1[c] = [ path1[c][0] * 0.7, path1[c][1] * 1, path1[c][2] ];
 	}
 

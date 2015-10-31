@@ -20,8 +20,9 @@ NormalsGrapher.prototype.prepareToRender = function (gl) {
 	var vertices = [];
 	var indexes = [];
 	var colors = [];
+	var i;
 
-	for (var i = 0; i < modelV.length; i += 3) {
+	for (i = 0; i < modelV.length; i += 3) {
 		vertices.push(modelV[i]);
 		vertices.push(modelV[i + 1]);
 		vertices.push(modelV[i + 2]);
@@ -37,7 +38,7 @@ NormalsGrapher.prototype.prepareToRender = function (gl) {
 		vertices.push(n[2]);
 	}
 
-	for (var i = 0; i < vertices.length / 3; i++) {
+	for (i = 0; i < vertices.length / 3; i++) {
 		indexes.push(i);
 		colors = colors.concat(Color.RED);
 	}

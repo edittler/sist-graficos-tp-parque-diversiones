@@ -1,3 +1,4 @@
+/* exported Color */
 /*
  * Colores predefinidos
  */

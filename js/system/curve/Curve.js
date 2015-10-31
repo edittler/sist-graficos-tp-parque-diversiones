@@ -20,7 +20,7 @@ Curve.prototype.getControlPoints = function () {
 	return this.ctrlPoints;
 };
 
-Curve.prototype.getPoints = function (definition) {
+Curve.prototype.getPoints = function (definition) { // jshint ignore:line
 	console.error("Error: Abstract method not implemented");
 	return;
 };

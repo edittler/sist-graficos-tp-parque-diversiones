@@ -1,7 +1,6 @@
 /*
  * Sillas voladoras
  */
-
 function SillasVoladoras() {
     this._soporteGiratorio;
     this._base;
@@ -11,7 +10,7 @@ function SillasVoladoras() {
 
 //Metodos
 SillasVoladoras.prototype = (function () {
-    var pr = {};
+    var pr = {}; // jshint ignore:line
     var pu = Object.create(ComplexModel.prototype);  // extiende ComplexModel
 
     pu.constructor = function() {
@@ -24,7 +23,7 @@ SillasVoladoras.prototype = (function () {
 
         pu.addChild.call(this, this._base);
         pu.addChild.call(this,  this._soporteGiratorio);
-    }
+    };
 
     return pu;
 })();

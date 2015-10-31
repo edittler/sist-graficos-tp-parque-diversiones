@@ -6,7 +6,7 @@ function Base() {
 
     var torre = new Path(10);
     torre.addStretch(new LinearCurve([
-        [15,0], [15,30], [10,40], [10,40], [8.7,55], [8.7,85], 
+        [15,0], [15,30], [10,40], [10,40], [8.7,55], [8.7,85],
     ]));
 
     var geometry = new RevolutionSurface(torre, 30);

@@ -1,15 +1,15 @@
 var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
 
-var renderer, escena, simulador;
+var renderer, escena;
 
-var piso, fondo, vueltaAlMundo, sillasVoladoras, montaniaRusa, carro;
+var piso, fondo, vueltaAlMundo, sillasVoladoras, montaniaRusa;
 
 var camara, camaraOrbital, camaraPrimeraPersona, camaraSeguimiento;
 
 var ambientColor, directionalColor, directionalPosition;
 var spotlightColor, spotlightPosition, spotlightDirection;
 
-function start() {
+function start() { // jshint ignore:line
 	init();
 	loop();
 }
@@ -81,7 +81,7 @@ function init() {
 	camaraSeguimiento = new CamaraSeguimiento(montaniaRusa.getCarro(), w, h, eyeSeguimiento, targetSeguimiento, up);
 }
 
-function listenToKeyboard(tick) {
+function listenToKeyboard() {
 	// TODO: dado que Keyboard es estático sería bueno poner el
 	// comportamiento de a cada objeto en los metodos update()
 	// correspondientes y no en esta funcion
@@ -174,7 +174,7 @@ function loop() {
 
 	renderer.clear();
 
-	listenToKeyboard(time);
+	listenToKeyboard();
 	listenToMouse();
 
 	escena.update(time); // actualiza todos los modelos

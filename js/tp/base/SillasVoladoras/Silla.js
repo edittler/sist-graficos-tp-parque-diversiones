@@ -10,7 +10,7 @@ function Silla(width) {
 
 // Métodos
 Silla.prototype = (function() {
-    var pr = {};
+    var pr = {}; // jshint ignore:line
     var pu = Object.create(ComplexModel.prototype);
 
     pu.constructor = function() {
@@ -42,7 +42,7 @@ Silla.prototype = (function() {
         var canio3 = new Canio(subcanioHeight);
         canio3.translateY(-canioHeight - (totalHeight - canioHeight)/2);
         canio3.translateZ(this._width/4);
-        canio3.rotateX(anguloSubcanio);        
+        canio3.rotateX(anguloSubcanio);
 
         pu.addChild.call(this, this._base);
         pu.addChild.call(this, this._respaldo);
@@ -50,7 +50,7 @@ Silla.prototype = (function() {
         pu.addChild.call(this, canio2);
         pu.addChild.call(this, canio3);
 
-    }
+    };
 
     // Métodos privados
 

@@ -2,7 +2,7 @@
  * Modelo simple con buffers y shaders asociados. Es un único poliedro.
  * Está definido por una geometría y un material que lo recubre.
  */
-function PrimitiveModel(geometry, material, auto) {
+function PrimitiveModel(geometry, material) {
 	Model.call(this);
 
 	this.shaderProgram;

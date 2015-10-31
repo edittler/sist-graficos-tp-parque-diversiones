@@ -9,11 +9,9 @@ function Carro(path) {
 	this.recorrido = new Path(8);
 	this.recorrido.addStretch(this.curva);
 
-	var punto = this.curva.pointAt(4, 3);
-
 	var material = new ColoredMaterial(Color.RED);
 	var ancho = 5;
-	var largo = 10
+	var largo = 10;
 	var alto = 5;
 	this.caja = new Box(ancho, alto, largo, material);
 
@@ -70,9 +68,9 @@ Carro.prototype.update = function (elapsedTime) {
 	// m2 = rotacion segun ejes tan,nrm,bin   (defino un cambio de base)
 	var m2 = mat4.create();
 	//m2.makeBasis(tan, nrm, bin);
-	var tan4 = vec4.fromValues(tan[0], tan[1], tan[2], 0.0);
-	var nrm4 = vec4.fromValues(nrm[0], nrm[1], nrm[2], 0.0);
-	var bin4 = vec4.fromValues(bin[0], bin[1], bin[2], 0.0);
+	//var tan4 = vec4.fromValues(tan[0], tan[1], tan[2], 0.0);
+	//var nrm4 = vec4.fromValues(nrm[0], nrm[1], nrm[2], 0.0);
+	//var bin4 = vec4.fromValues(bin[0], bin[1], bin[2], 0.0);
 	// TODO: Armar la matriz de cambio de base.
 	mat4.multiply(m1, m1, m2); // m1 = m1 * m2
 

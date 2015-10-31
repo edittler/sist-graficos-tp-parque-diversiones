@@ -20,7 +20,7 @@ ColoredMaterial.prototype.setColorMappings = function (colors) {
 
 // @override
 ColoredMaterial.prototype.genetareMappings = function (levels, faces) {
-	if (this.vertexMapping.length == 0) {
+	if (this.vertexMapping.length === 0) {
 		for (var c = 0; c < levels * faces; c++) {
 			this.vertexMapping = this.vertexMapping.concat(this.color);
 		}
@@ -34,7 +34,7 @@ ColoredMaterial.prototype.getColorMappings = function () {
 
 // @override
 ColoredMaterial.prototype.getTextureMappings = function () {
-	return new Array(); // devuelve un array vacio
+	return []; // devuelve un array vacio
 };
 
 // @override

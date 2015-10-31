@@ -1,4 +1,9 @@
 var lastTime = 0; // Tiempo de la última vez que se ejecutó la animación
+var elapTime = 0;
+var minTime = 30;
+var frameTime = 0;
+var frameCount = 0;
+var fps;
 
 var renderer, escena;
 
@@ -171,6 +176,26 @@ function loop() {
 	requestAnimationFrame(loop);
 
 	var time = elapsedTime();
+
+	elapTime += time;
+	frameTime += time;
+
+	if (frameTime < minTime) {
+		return;
+	} else {
+		time = frameTime;
+		frameTime = 0;
+	}
+
+	frameCount++;
+
+	if(elapTime >= 1000) {
+		fps = frameCount;
+		frameCount = 0;
+		elapTime -= 1000;
+
+		document.getElementById('test').innerHTML = fps;
+	}
 
 	renderer.clear();
 

@@ -5,9 +5,6 @@
 	<meta charset="UTF-8">
 	<title>66.71 Sistemas Gráficos - Parque de diversiones</title>
 
-	<!-- Load JavaScript Libraries -->
-	<script src="scripts/libs/gl-matrix-min.js" defer></script>
-
 	<!--
 		Vertex shader
 
@@ -380,6 +377,12 @@
 		}
 	</script>
 
+	<!-- Load Styles -->
+	<link rel="stylesheet" href="css/styles.css" />
+
+	<!-- Load JavaScript Libraries -->
+	<script src="scripts/libs/gl-matrix-min.js" defer></script>
+
 	<!-- JavaScript de sistema WebGL -->
 
 	<!--
@@ -476,9 +479,6 @@
 	<script src="scripts/tp.js" defer></script>
 
 	<script src="//localhost:35729/livereload.js" defer></script>
-
-	<!-- Load Styles -->
-	<link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body onload="start()">
@@ -507,6 +507,7 @@
 				<li>Tecla D: Moverse hacia la derecha (manteniendo dirección)</li>
 			</ul>
 		</div>
+		<div><p>FPS: <span id="test"></span></p></div>
 	</div>
 </body>
 

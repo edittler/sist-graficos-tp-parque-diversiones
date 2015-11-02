@@ -464,15 +464,35 @@ Transformable.prototype.getPosition = function () {
 	return v;
 };
 
-/*
+/**
  * Clase de utilidades con métodos estáticos
  */
 
 function Utils() {}
 
 // Métodos estáticos
+
 Utils.degToRad = function (rad) {
 	return rad * (Math.PI / 180);
+};
+
+/**
+ * Calcula el ángulo entre 2 vectores de 3 dimensiones
+ *
+ * @param {vec3} a vector de 3 dimensiones
+ * @param {vec3} b vector de 3 dimensiones
+ * @returns {Number} angulo entre los 2 vectores
+ */
+Utils.angleBetweenVectors = function (a, b) {
+	var normalizedA = vec3.create();
+	vec3.normalize(normalizedA, a);
+
+	var normalizedB = vec3.create();
+	vec3.normalize(normalizedB, b);
+
+	var dotProduct = vec3.dot(normalizedA, normalizedB);
+	var angle = Math.acos(dotProduct);
+	return angle;
 };
 
 Utils.randomBetween = function (a, b) {
@@ -519,6 +539,42 @@ BSplineCurve.prototype.getPoints = function (definition) {
 
 	for (var u = 0; u <= this.numbStretchs + deltaU; u += deltaU) {
 		var point = this.pointAt(u, stretch);
+		points = points.concat([point]);
+
+		if (Math.floor(u) > stretch) {
+			stretch++;
+		}
+	}
+
+	return points;
+};
+
+BSplineCurve.prototype.derivativePointAt = function (u, stretch) {
+	var basis = this.derivativeBasis;
+	var ctrlPoints = this.ctrlPoints;
+
+	var startPoint = stretch + basis.length > ctrlPoints.length ? stretch - 1 : stretch;
+	var deltaU = u - stretch;
+
+	var point = [];
+
+	for (var c = 0; c < 3; c++) {
+		point[c] = 0;
+		for (var p = 0; p < basis.length; p++) {
+			point[c] += basis[p](deltaU) * ctrlPoints[startPoint + p][c];
+		}
+	}
+
+	return point;
+};
+
+BSplineCurve.prototype.getDerivativePoints = function (definition) {
+	var points = [];
+	var deltaU = 1 / definition;
+	var stretch = 0;
+
+	for (var u = 0; u <= this.numbStretchs + deltaU; u += deltaU) {
+		var point = this.derivativePointAt(u, stretch);
 		points = points.concat([point]);
 
 		if (Math.floor(u) > stretch) {
@@ -599,6 +655,20 @@ function CubicBSpline(ctrlPoints) {
 	};
 	this.basis[3] = function (u) {
 		return u * u * u * 1 / 6;
+	};
+
+	this.derivativeBasis = [];
+	this.derivativeBasis[0] = function (u) {
+		return (1 - u) * (1 - u) * 1 / 2;
+	};
+	this.derivativeBasis[1] = function (u) {
+		return (- 4 * u + 3 * u * u) * 1 / 2;
+	};
+	this.derivativeBasis[2] = function (u) {
+		return (1 + 2 * u - 3 * u * u) * 1 / 2;
+	};
+	this.derivativeBasis[3] = function (u) {
+		return u * u * 1 / 2;
 	};
 
 	BSplineCurve.call(this, ctrlPoints, this.basis);

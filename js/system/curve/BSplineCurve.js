@@ -43,3 +43,39 @@ BSplineCurve.prototype.getPoints = function (definition) {
 
 	return points;
 };
+
+BSplineCurve.prototype.derivativePointAt = function (u, stretch) {
+	var basis = this.derivativeBasis;
+	var ctrlPoints = this.ctrlPoints;
+
+	var startPoint = stretch + basis.length > ctrlPoints.length ? stretch - 1 : stretch;
+	var deltaU = u - stretch;
+
+	var point = [];
+
+	for (var c = 0; c < 3; c++) {
+		point[c] = 0;
+		for (var p = 0; p < basis.length; p++) {
+			point[c] += basis[p](deltaU) * ctrlPoints[startPoint + p][c];
+		}
+	}
+
+	return point;
+};
+
+BSplineCurve.prototype.getDerivativePoints = function (definition) {
+	var points = [];
+	var deltaU = 1 / definition;
+	var stretch = 0;
+
+	for (var u = 0; u <= this.numbStretchs + deltaU; u += deltaU) {
+		var point = this.derivativePointAt(u, stretch);
+		points = points.concat([point]);
+
+		if (Math.floor(u) > stretch) {
+			stretch++;
+		}
+	}
+
+	return points;
+};

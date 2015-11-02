@@ -16,6 +16,20 @@ function CubicBSpline(ctrlPoints) {
 		return u * u * u * 1 / 6;
 	};
 
+	this.derivativeBasis = [];
+	this.derivativeBasis[0] = function (u) {
+		return (1 - u) * (1 - u) * 1 / 2;
+	};
+	this.derivativeBasis[1] = function (u) {
+		return (- 4 * u + 3 * u * u) * 1 / 2;
+	};
+	this.derivativeBasis[2] = function (u) {
+		return (1 + 2 * u - 3 * u * u) * 1 / 2;
+	};
+	this.derivativeBasis[3] = function (u) {
+		return u * u * 1 / 2;
+	};
+
 	BSplineCurve.call(this, ctrlPoints, this.basis);
 }
 

@@ -13,7 +13,7 @@ Via.prototype = (function() {
     pu.constructor = function( path , ratio, color) {
         PrimitiveModel.prototype.constructor.call(this);
 
-        var circulo = new Circle(ratio);
+        var circulo = new TriCircle(ratio);
 
         var recorrido = new Path(8);
         recorrido.addStretch(new CubicBSpline(path));

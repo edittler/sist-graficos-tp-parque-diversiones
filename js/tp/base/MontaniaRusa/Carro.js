@@ -6,7 +6,7 @@ function Carro(path) {
 
 	this.curva = new CubicBSpline(path);
 
-	var precision = 22;
+	var precision = 24;
 
 	this.puntos = this.curva.getPoints(precision);
 	this.derivadas = this.curva.getDerivativePoints(precision);
@@ -52,7 +52,7 @@ Carro.prototype.update = function (elapsedTime) {
 	vec3.normalize(tan, tan);
 	console.log("X: " + tan[0] + " Y: " + tan[1] + " Z: " + tan[2]);
 
-
+	/*
 	// defino el vector UP
 	var UP = vec3.fromValues(0, 1, 0);
 
@@ -63,64 +63,25 @@ Carro.prototype.update = function (elapsedTime) {
 	//nrm = tan x bin
 	var nrm = vec3.create();
 	vec3.cross(nrm, tan, bin);
+	*/
 
-	// m1 = traslación a POS
-	//var m1 = mat4.create();
-	//mat4.translate(m1, m1, pos);
-	//mat4.scale(m1, m1, vec3.fromValues(2, 2, 2));
-
-	// Realizo cambio de base
-	//this.updateMatrix(m1, tan, nrm, bin);
-
-	// m2 = rotacion segun ejes tan,nrm,bin   (defino un cambio de base)
-	//var m2 = mat4.create();
-	//this.updateMatrix(m2, tan, nrm, bin);
-	//m2.makeBasis(tan, nrm, bin);
-	//var tan4 = vec4.fromValues(tan[0], tan[1], tan[2], 0.0);
-	//var nrm4 = vec4.fromValues(nrm[0], nrm[1], nrm[2], 0.0);
-	//var bin4 = vec4.fromValues(bin[0], bin[1], bin[2], 0.0);
-	// TODO: Armar la matriz de cambio de base.
-	//mat4.multiply(m1, m1, m2); // m1 = m1 * m2
-
-	//this.caja.applyTransformationMatrix(m1);
-	//this.axis.applyTransformationMatrix(m1);
-
-	//this.resetTransformations();
 	this.setPosition(point[0], point[1], point[2]);
 	this.rotateZ(this.angleZ(tan));
-	this.rotateY(this.angleY(tan));
-	//this.rotateX(this.angleX(tan));
-	//this.direccion = tan;
-};
-
-Carro.prototype.updateMatrix = function (mat4, tan, nrm, bin) {
-	// primera columna, agrego tangente
-	mat4[0] = tan[0];
-	mat4[1] = tan[1];
-	mat4[2] = tan[2];
-
-	// segunda columna, agrego normal
-	mat4[4] = nrm[0];
-	mat4[5] = nrm[1];
-	mat4[6] = nrm[2];
-
-	// tercera columna, agrego bin
-	mat4[8] = bin[0];
-	mat4[9] = bin[1];
-	mat4[10] = bin[2];
+	//this.rotateY(this.angleY(tan));
+	this.rotateY(this.angleX(tan) - Math.PI / 2);
 };
 
 Carro.prototype.angleZ = function (vec) {
-	var a = this.direccion;
+	var a = vec3.clone(this.direccion);
 	var b = vec3.clone(vec);
-	a[2] = 0;
-	b[2] = 0;
+	a = this.rotarAlPlanoXY(a);
+	b = this.rotarAlPlanoXY(b);
 	var cross = vec3.create();
 	vec3.cross(cross, a, b);
 	var angle = Utils.angleBetweenVectors(a, b);
 	//console.log("Angle Z: " + angle + " Z Direction: " + cross[2]);
 	if (cross[2] < 0) {
-		angle *= -1;
+		//angle *= -1;
 	}
 	return angle;
 };
@@ -150,25 +111,78 @@ Carro.prototype.angleY = function (vec) {
 };
 
 Carro.prototype.angleX = function (vec) {
-	var a = this.direccion;
+	var a = vec3.clone(this.direccion);
 	var b = vec3.clone(vec);
-	a[0] = 0;
-	//console.log("X Direction: " + b[0] + " Y Direction: " + b[1] + " Z Direction: " + b[2]);
-	b[0] = 0;
-	/*
-	if (vec3.length(vec)) {
-		return 0;
-	}
-	*/
+	a = this.rotarAlPlanoYZ(a);
+	b = this.rotarAlPlanoYZ(b);
 	var cross = vec3.create();
 	vec3.cross(cross, a, b);
 	var angle = Utils.angleBetweenVectors(a, b);
-	console.log("Angle X: " + angle + " X Direction: " + cross[1]);
-	/*
-	if (cross[1] < 0) {
+	//console.log("Angle X: " + angle + " X Direction: " + cross[1]);
+	if (cross[0] > 0) {
 		angle *= -1;
 	}
-	*/
 	return angle;
-	//return 0;
+};
+
+Carro.prototype.rotarAlPlanoXY = function (vec) {
+	if (vec[2] === 0) {
+		return vec;
+	}
+	var catAdy, c1, c2, c3, c4;
+	if (vec[0] > vec[1]) {
+		catAdy = vec[0];
+		c1 = 0;
+		c2 = 2;
+		c3 = 8;
+		c4 = 10;
+	} else {
+		catAdy = vec[1];
+		c1 = 5;
+		c2 = 6;
+		c3 = 9;
+		c4 = 10;
+	}
+	var dis = Math.sqrt(catAdy * catAdy + vec[2] * vec[2]);
+	var mat = mat4.create();
+	var cos = catAdy / dis;
+	var sen = vec[2] / dis;
+	mat[c1] = cos;
+	mat[c2] = sen;
+	mat[c3] = sen;
+	mat[c4] = -cos;
+	var vecRot = vec3.create();
+	vec3.transformMat4(vecRot, vec, mat);
+	return vecRot;
+};
+
+Carro.prototype.rotarAlPlanoYZ = function (vec) {
+	if (vec[0] === 0) {
+		return vec;
+	}
+	var catAdy, c1, c2, c3, c4;
+	if (vec[1] > vec[2]) {
+		catAdy = vec[1];
+		c1 = 0;
+		c2 = 1;
+		c3 = 4;
+		c4 = 5;
+	} else {
+		catAdy = vec[2];
+		c1 = 0;
+		c2 = 2;
+		c3 = 8;
+		c4 = 10;
+	}
+	var dis = Math.sqrt(catAdy * catAdy + vec[0] * vec[0]);
+	var mat = mat4.create();
+	var cos = catAdy / dis;
+	var sen = vec[0] / dis;
+	mat[c1] = cos;
+	mat[c2] = sen;
+	mat[c3] = -sen;
+	mat[c4] = cos;
+	var vecRot = vec3.create();
+	vec3.transformMat4(vecRot, vec, mat);
+	return vecRot;
 };

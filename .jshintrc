@@ -84,6 +84,7 @@
 		"Silla": true,
 		"SillasVoladoras": true,
 		"Via": true,
+		"TriCircle": true,
 		"Vias": true,
 		"Carro": true,
 		"MontaniaRusa": true

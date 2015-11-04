@@ -216,29 +216,12 @@ function MontaniaRusa() {
 	ComplexModel.call(this);
 
     var puntosControl = [
-        [0,20,0], [0,20,0], [0,20,0], [0,60,10], 
-        [0,60,10], [0,100,10], [0,100,20], [0,120,20], 
-        [0,120,30], [200,300,70], [400,400,-10], [500,200,-10], 
-        [500,100,10], [300,100,10], [400,100,10], [400,0,10],
-        [400,0,0], [0,20,0], [0,20,0], [0,20,0]
+        [0,0,0], [100,0,200], [200,70,200], [300,0,200], 
+        // [40,0,0], [50,10,0], [60,20,0], [70,0,0], 
+        // [400,100,0], [200,20,0], [100,20,0], [50,20,0],
+        // [20,-10,0], [20,-20,0], [20,-50,0], [0,20,0],
+        // [0,20,0],[0,20,0],
     ];
-    // var puntosControl = [
-    //     [0,20,0], [0,20,0], [0,20,0], [0,100,10], 
-    //     [0,200,20], [0,250,20], [0,270,20], [0,300,30], 
-    //     [0,350,30], [10,400,0], [10,400,0], [10,400,0], 
-    //     [30,400,30],[50,400,30],[50,400,30],[50,400,30],
-    //     [70,350,30],[80,300,40],[100,300,50],[100,250,60],
-    //     [50,100,20],[0,20,0], [0,20,0], [0,20,0],
-    // ];
-
-    // var puntosControl = [
-    //     [10,20,0], [10,20,0], [10,20,0], [10,100,10], 
-    //     [10,200,20], [10,250,20], [10,270,20], [10,300,30], 
-    //     [10,350,30], [20,400,0], [20,400,0], [20,400,0], 
-    //     [40,400,30],[60,400,30],[60,400,30],[60,400,30],
-    //     [80,350,30],[90,300,40],[110,300,50],[110,250,60],
-    //     [60,100,20],[10,20,0], [10,20,0], [10,20,0],
-    // ];
 
 	this.vias = new Vias(puntosControl);
 	this.carro = new Carro(puntosControl);
@@ -273,12 +256,12 @@ Via.prototype = (function() {
     pu.constructor = function( path , ratio, color) {
         PrimitiveModel.prototype.constructor.call(this);
 
-        var circulo = new Circle(ratio);
+        var tricirculo = new TriCircle(ratio);
 
         var recorrido = new Path(8);
         recorrido.addStretch(new CubicBSpline(path));
         
-        var geometry = new SweptSurface(recorrido, circulo);
+        var geometry = new SweptSurface(recorrido, tricirculo);
         geometry.setClosedShapes(false);
         geometry.setClosedEndings(false);
 
@@ -298,29 +281,9 @@ Via.prototype = (function() {
 function Vias(path) {
 	ComplexModel.call(this);
 
-	var path2 = path.slice();
-	var c;
-	for (c = 0; c < path2.length; c++) {
-		path2[c] = [ path2[c][0] * 1.5, path2[c][1] * 1.1, path2[c][2] ];
-	}
+	var via = new Via(path ,1.6, Color.GREY);
 
-	var path1 = path.slice();
-	for (c = 0; c < path1.length; c++) {
-		path1[c] = [ path1[c][0] * 0.7, path1[c][1] * 1, path1[c][2] ];
-	}
-
-	var via1 = new Via(path1 ,1, Color.GREY);
-	via1.translate(-100, -60, 50);
-
-	var via2 = new Via(path2, 1, Color.ORANGE);
-	via2.translate(-100, -60, 50);
-
-	var via3 = new Via(path, 0.5, Color.GREY);
-	//via3.translate(-95, -65, 47);
-
-	// this.addChild(via1);
-	// this.addChild(via2);
-	this.addChild(via3);
+	this.addChild(via);
 
 }
 
@@ -1086,6 +1049,7 @@ function init() {
 	montaniaRusa = new MontaniaRusa();
 	montaniaRusa.translateX(-150);
 	montaniaRusa.translateY(200);
+	montaniaRusa.translateZ(50);
 
 	escena = new Scene();
 

@@ -49,6 +49,7 @@ function init() {
 	montaniaRusa = new MontaniaRusa();
 	montaniaRusa.translateX(-150);
 	montaniaRusa.translateY(200);
+	montaniaRusa.translateZ(50);
 
 	escena = new Scene();
 

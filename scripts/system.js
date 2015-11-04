@@ -2618,27 +2618,17 @@ Trapezoid.prototype.constructor = Trapezoid;
 function TriCircle(radius) {
 	Path.call(this, 10);
 
-	var r = radius;
-	var c = 0.55191502 * r;
-	var curve1 = new CubicBezier([[0, r], [c, r], [r, c], [r, 0]]);
-	var curve2 = new CubicBezier([[r, 0], [r, -c], [c, -r], [0, -r]]);
-	var curve3 = new CubicBezier([[0, -r], [-c, -r], [-r, -c], [-r, 0]]);
-	var curve4 = new CubicBezier([[-r, 0], [-r, c], [-c, r], [0, r]]);
+	var circle1 = new Circle(radius);
+	var circle2 = new Circle(radius/2);
+	var circle3 = new Circle(radius);
 
-	// var curve5 = new CubicBezier([[10, r], [c+10, r], [r+10, c], [r+10, 0]]);
-	// var curve6 = new CubicBezier([[r+10, 0], [r+10, -c], [c+10, -r], [10, -r]]);
-	// var curve7 = new CubicBezier([[10, -r], [-c+10, -r], [-r+10, -c], [-r+10, 0]]);
-	// var curve8 = new CubicBezier([[-r+10, 0], [-r+10, c], [-c+10, r], [10, r]]);
+	circle1.translateY(10);
+	circle2.translateX(-5);
+	circle3.translateY(-10);
 
-	this.addStretch(curve1);
-	this.addStretch(curve2);
-	this.addStretch(curve3);
-	this.addStretch(curve4);
-	// this.addStretch(curve5);
-	// this.addStretch(curve6);
-	// this.addStretch(curve7);
-	// this.addStretch(curve8);
-
+	this.addStretch(circle1);
+	this.addStretch(circle2);
+	this.addStretch(circle3);	
 
 }
 

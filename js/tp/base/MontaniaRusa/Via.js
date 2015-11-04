@@ -13,12 +13,12 @@ Via.prototype = (function() {
     pu.constructor = function( path , ratio, color) {
         PrimitiveModel.prototype.constructor.call(this);
 
-        var circulo = new TriCircle(ratio);
+        var tricirculo = new TriCircle(ratio);
 
         var recorrido = new Path(8);
         recorrido.addStretch(new CubicBSpline(path));
         
-        var geometry = new SweptSurface(recorrido, circulo);
+        var geometry = new SweptSurface(recorrido, tricirculo);
         geometry.setClosedShapes(false);
         geometry.setClosedEndings(false);
 

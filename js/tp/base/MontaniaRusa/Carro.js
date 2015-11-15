@@ -50,7 +50,7 @@ Carro.prototype.update = function (elapsedTime) {
 	var derivada = this.derivadas[modDistancia];
 	var tan = vec3.fromValues(derivada[0], derivada[1], derivada[2]);
 	vec3.normalize(tan, tan);
-	console.log("X: " + tan[0] + " Y: " + tan[1] + " Z: " + tan[2]);
+	//console.log("X: " + tan[0] + " Y: " + tan[1] + " Z: " + tan[2]);
 
 	/*
 	// defino el vector UP

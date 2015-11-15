@@ -4,9 +4,9 @@ function Piso() {
 
 	var pisoSize = 2000;
 
-	var material = new ColoredMaterial(Color.FORESTGREEN);
-	//var material = new TexturedMaterial("images/superficie.jpg");
-	//material.setNormalMap("images/superficie-normalmap.jpg");
+	//var material = new ColoredMaterial(Color.FORESTGREEN);
+	var material = new TexturedMaterial("images/grass_texture.png");
+	material.setNormalMap("images/grass_normalmap.png");
 
 	Sprite.call(this, pisoSize, pisoSize, material);
 
@@ -25,7 +25,6 @@ function Piso() {
 }
 
 Piso.prototype = Object.create(Sprite.prototype);
-
 Piso.prototype.constructor = Piso;
 
 /*

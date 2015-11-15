@@ -1179,6 +1179,34 @@ BasicColorSP.prototype.init = function (gl) {
 };
 
 /*
+ * ShaderProgram con textura
+ */
+function BasicTextureSP() {
+	ShaderProgram.call(this);
+
+	var vs = Shader.obtainSrcFromHtmlElement("basicoTextura-vs");
+	var fs = Shader.obtainSrcFromHtmlElement("basicoTextura-fs");
+
+	this.setSource(vs, fs);
+}
+
+BasicTextureSP.prototype = Object.create(ShaderProgram.prototype);
+BasicTextureSP.prototype.constructor = BasicTextureSP;
+
+// @override
+BasicTextureSP.prototype.init = function (gl) {
+	ShaderProgram.prototype.init.call(this, gl);
+
+	this.locateUniform(gl, "uPMatrix");
+	this.locateUniform(gl, "uMVMatrix");
+
+	this.locateAttribute(gl, "aVertexPosition");
+	this.locateAttribute(gl, "aTextureCoord");
+
+	this.locateUniform(gl, "uSampler");
+};
+
+/*
  * ShaderProgram con iluminación y color
  */
 function LightAndColorSP() {
@@ -1217,6 +1245,55 @@ LightAndColorSP.prototype.init = function (gl) {
 	this.locateUniform(gl, "uCameraPos");
 
 	this.locateUniform(gl, "uShininess");
+};
+
+/*
+ *  ShaderProgram con iluminación y textura
+ */
+function LightAndTextureSP() {
+	ShaderProgram.call(this);
+
+	var vs = Shader.obtainSrcFromHtmlElement("conIluminacionYTextura-vs");
+	var fs = Shader.obtainSrcFromHtmlElement("conIluminacionYTextura-fs");
+
+	this.setSource(vs, fs);
+}
+
+LightAndTextureSP.prototype = Object.create(ShaderProgram.prototype);
+LightAndTextureSP.prototype.constructor = LightAndTextureSP;
+
+// @override
+LightAndTextureSP.prototype.init = function (gl) {
+	ShaderProgram.prototype.init.call(this, gl);
+
+	this.locateUniform(gl, "uPMatrix");
+	this.locateUniform(gl, "uMVMatrix");
+	this.locateUniform(gl, "uNMatrix");
+
+	this.locateAttribute(gl, "aVertexPosition");
+	this.locateAttribute(gl, "aVertexNormal");
+	this.locateAttribute(gl, "aVertexTangent");
+	this.locateAttribute(gl, "aTextureCoord");
+
+	this.locateUniform(gl, "uSampler");
+	this.locateUniform(gl, "uSamplerLightMap");
+	this.locateUniform(gl, "uSamplerNormalMap");
+	this.locateUniform(gl, "uReflectionMap");
+
+	this.locateUniform(gl, "uAmbientColor");
+	this.locateUniform(gl, "uDirectionalColor");
+	this.locateUniform(gl, "uLightPosition");
+
+	this.locateUniform(gl, "uCarLightColor");
+	this.locateUniform(gl, "uCarLightTransformedPosition");
+	this.locateUniform(gl, "uCarLightTransformedDirection");
+
+	this.locateUniform(gl, "uShininess");
+	this.locateUniform(gl, "uReflectionFactor");
+	this.locateUniform(gl, "uUsingLightMap");
+	this.locateUniform(gl, "uLightMapFactor");
+	this.locateUniform(gl, "uUsingNormalMap");
+	this.locateUniform(gl, "uUsingReflectionMap");
 };
 
 /*
@@ -1834,6 +1911,51 @@ ColoredMaterial.prototype.getShaderProgram = function () {
 };
 
 /*
+ * Textura formada por 6 imágenes para simular reflexión
+ */
+function CubeMap(imgSrcs) {
+	this.glTexture;
+
+	this.imgSrcs = imgSrcs; // nombres de las 6 imágenes que forman el cubo
+}
+
+CubeMap.prototype.init = function (gl) {
+	var glTexture = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_CUBE_MAP, glTexture);
+
+	var ct = 0;
+	var img = new Array(6);
+
+	for (var i = 0; i < 6; i++) {
+		img[i] = new Image();
+		img[i].src = this.imgSrcs[i];
+		img[i].onload = function () {
+			ct++;
+			if (ct == 6) {
+				var targets = [
+					gl.TEXTURE_CUBE_MAP_POSITIVE_X, gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+					gl.TEXTURE_CUBE_MAP_POSITIVE_Y, gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+					gl.TEXTURE_CUBE_MAP_POSITIVE_Z, gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
+				];
+				for (var j = 0; j < 6; j++) {
+					gl.texImage2D(targets[j], 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img[j]);
+					gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+					gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+				}
+				gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+			}
+		}; // jshint ignore:line
+	}
+
+	this.glTexture = glTexture;
+};
+
+CubeMap.prototype.bind = function (gl, id) {
+	gl.activeTexture(id);
+	gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glTexture);
+};
+
+/*
  * Material que recubre un modelo. Tiene un shader asociado.
  */
 function Material() {
@@ -1908,6 +2030,175 @@ Material.prototype.getTextureMappings = function () {
 
 Material.prototype.getShaderProgram = function () {
 	console.error("Error: Abstract method not implemented");
+};
+
+/*
+ * Textura extraída de una imagen
+ */
+function Texture(imgSrc) {
+	this.glTexture;
+
+	this.imageSrc = imgSrc; // nombre de la imagen de la que se extrae la textura
+}
+
+// Métodos públicos
+Texture.prototype.init = function (gl, repeat) {
+	var handleLoadedTexture = function (gl, texture, repeat) {
+		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+		gl.bindTexture(gl.TEXTURE_2D, texture);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+		if (!repeat[0]) { // u
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+		}
+		if (!repeat[1]) { // v
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+		}
+		gl.generateMipmap(gl.TEXTURE_2D);
+
+		gl.bindTexture(gl.TEXTURE_2D, null);
+	};
+
+	var glTexture = gl.createTexture();
+	glTexture.image = new Image();
+	glTexture.image.src = this.imageSrc;
+	glTexture.image.onload = function () {
+		handleLoadedTexture.call(this, gl, glTexture, repeat);
+	};
+
+	this.glTexture = glTexture;
+};
+
+Texture.prototype.bind = function (gl, id) {
+	gl.activeTexture(id);
+	gl.bindTexture(gl.TEXTURE_2D, this.glTexture);
+};
+/*
+ * Material con textura
+ */
+function TexturedMaterial(imgSrc) {
+	Material.call(this);
+	this.texture = new Texture(imgSrc);
+	this.lightMap = null;
+	this.normalMap = null; // Bump Map
+
+	this.transforms = mat3.create(); // matriz de transformaciones 2d
+	this.mosaic = [true, true]; // coordenadas <0 y >1 repiten la textura
+
+	this.usingLightMap = false;
+	this.usingNormalMap = false;
+
+	this.lightMapFactor;
+}
+
+TexturedMaterial.prototype = Object.create(Material.prototype);
+TexturedMaterial.prototype.constructor = TexturedMaterial;
+
+TexturedMaterial.prototype.setTexture = function (texture) {
+	this.texture = texture;
+};
+
+TexturedMaterial.prototype.isUsingLightMap = function () {
+	return Utils.isDefined(this.lightMap);
+};
+
+TexturedMaterial.prototype.isUsingNormalMap = function () {
+	return Utils.isDefined(this.normalMap);
+};
+
+TexturedMaterial.prototype.setLightMap = function (imgSrc, factor) {
+	this.lightMap = new Texture(imgSrc);
+	this.lightMapFactor = factor;
+	this.usingLightMap = true;
+};
+
+TexturedMaterial.prototype.setNormalMap = function (imgSrc) {
+	this.normalMap = new Texture(imgSrc);
+	this.usingNormalMap = true;
+};
+
+TexturedMaterial.prototype.setTextureMappings = function (texcoords) {
+	this.vertexMapping = texcoords;
+};
+
+TexturedMaterial.prototype.mosaic = function (u, v) {
+	this.mosaic = [u, v];
+};
+
+TexturedMaterial.prototype.rotate = function (rad) {
+	mat3.rotate(this.transforms, this.transforms, rad);
+};
+
+TexturedMaterial.prototype.translate = function (u, v) {
+	var vec = vec2.fromValues(u, v);
+	mat3.translate(this.transforms, this.transforms, vec);
+};
+
+TexturedMaterial.prototype.scale = function (u, v) {
+	var vec = vec2.fromValues(u, v);
+	mat3.scale(this.transforms, this.transforms, vec);
+};
+
+// @override
+TexturedMaterial.prototype.prepareMaterial = function (gl) {
+	Material.prototype.prepareMaterial.call(this, gl);
+
+	this.texture.init(gl, this.mosaic);
+	if (this.isUsingLightMap()) {
+		this.lightMap.init(gl, this.mosaic);
+	}
+	if (this.isUsingNormalMap()) {
+		this.normalMap.init(gl, this.mosaic);
+	}
+};
+
+// @override
+TexturedMaterial.prototype.drawMaterial = function (gl) {
+	Material.prototype.drawMaterial.call(this, gl);
+
+	this.texture.bind(gl, gl.TEXTURE0);
+	if (this.isUsingLightMap()) {
+		this.lightMap.bind(gl, gl.TEXTURE1);
+	}
+	if (this.isUsingNormalMap()) {
+		this.normalMap.bind(gl, gl.TEXTURE2);
+	}
+};
+
+// @override
+TexturedMaterial.prototype.genetareMappings = function (levels, faces) {
+	if (this.vertexMapping.length === 0) {
+		for (var n = 0; n < levels; n++) {
+			for (var c = 0; c < faces; c++) {
+				var u = n / (levels - 1);
+				var v = c / (faces - 1);
+
+				var vec = vec2.fromValues(u, v);
+				vec2.transformMat3(vec, vec, this.transforms);
+				this.vertexMapping = this.vertexMapping.concat([vec[0], vec[1]]);
+			}
+		}
+	}
+};
+
+// @override
+TexturedMaterial.prototype.getColorMappings = function () {
+	return []; // devuelve un array vacio
+};
+
+// @override
+TexturedMaterial.prototype.getTextureMappings = function () {
+	return this.vertexMapping;
+};
+
+// @override
+TexturedMaterial.prototype.getShaderProgram = function () {
+	if (this.supportsLight) {
+		return new LightAndTextureSP();
+	} else {
+		return new BasicTextureSP();
+	}
 };
 
 /*

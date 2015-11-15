@@ -6,6 +6,24 @@ function Utils() {}
 
 // Métodos estáticos
 
+Utils.isDefined = function (val) {
+	return typeof val !== 'undefined' && val !== null;
+};
+
+Utils.randomBetween = function (a, b) {
+	return a + Math.floor((Math.random() * b) + 1);
+};
+
+/**
+ * Verifica si el valor es potencia de 2.
+ *
+ * @param {Number} value valor numero a verificar
+ * @returns {bool} true si el número es potencia de 2
+ */
+Utils.isPowerOf2 = function (value) {
+	return (value & (value - 1)) === 0;
+};
+
 Utils.degToRad = function (rad) {
 	return rad * (Math.PI / 180);
 };
@@ -27,12 +45,4 @@ Utils.angleBetweenVectors = function (a, b) {
 	var dotProduct = vec3.dot(normalizedA, normalizedB);
 	var angle = Math.acos(dotProduct);
 	return angle;
-};
-
-Utils.randomBetween = function (a, b) {
-	return a + Math.floor((Math.random() * b) + 1);
-};
-
-Utils.isDefined = function (val) {
-	return typeof val != 'undefined' && val !== null;
 };

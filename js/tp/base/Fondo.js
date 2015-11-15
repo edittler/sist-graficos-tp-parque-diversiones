@@ -4,6 +4,10 @@
 function Fondo() {
 	var material = new ColoredMaterial(Color.SKYBLUE);
 	//var material = new TexturedMaterial("images/background.jpg");
+	var images = ["images/beach/front.jpg", "images/beach/back.jpg",
+				  "images/beach/bottom.jpg", "images/beach/top.jpg",
+				  "images/beach/left.jpg", "images/beach/right.jpg"];
+	material.setCubeMap(images, 2.0);
 	material.setLightSupport(false);
 	//material.scale(0.5, 0.5);
 	//material.translate(2.3, 0.4);

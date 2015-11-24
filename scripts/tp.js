@@ -5,10 +5,10 @@
 function Fondo() {
 	var material = new ColoredMaterial(Color.SKYBLUE);
 	//var material = new TexturedMaterial("images/background.jpg");
-	var images = ["images/beach/front.jpg", "images/beach/back.jpg",
-				  "images/beach/bottom.jpg", "images/beach/top.jpg",
-				  "images/beach/left.jpg", "images/beach/right.jpg"];
-	material.setCubeMap(images, 2.0);
+	//var images = ["images/beach/front.jpg", "images/beach/back.jpg",
+	//			  "images/beach/bottom.jpg", "images/beach/top.jpg",
+	//			  "images/beach/left.jpg", "images/beach/right.jpg"];
+	//material.setCubeMap(images, 2.0);
 	material.setLightSupport(false);
 	//material.scale(0.5, 0.5);
 	//material.translate(2.3, 0.4);
@@ -301,8 +301,8 @@ function Piso() {
 	var pisoSize = 2000;
 
 	//var material = new ColoredMaterial(Color.FORESTGREEN);
-	var material = new TexturedMaterial("images/grass_texture.png");
-	material.setNormalMap("images/grass_normalmap.png");
+	var material = new TexturedMaterial("images/green-grass-texture.jpg");
+	material.setNormalMap("images/green-grass-normalmap.jpg");
 
 	Sprite.call(this, pisoSize, pisoSize, material);
 

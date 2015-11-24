@@ -5,8 +5,8 @@ function Piso() {
 	var pisoSize = 2000;
 
 	//var material = new ColoredMaterial(Color.FORESTGREEN);
-	var material = new TexturedMaterial("images/grass_texture.png");
-	material.setNormalMap("images/grass_normalmap.png");
+	var material = new TexturedMaterial("images/green-grass-texture.jpg");
+	material.setNormalMap("images/green-grass-normalmap.jpg");
 
 	Sprite.call(this, pisoSize, pisoSize, material);
 

@@ -237,7 +237,7 @@
 		varying vec3 vSpotLightDir;
 
 		void main(void) {
-			vTextureCoord = aTextureCoord;
+			vTextureCoord = aTextureCoord * 32.0;
 
 			vec4 vertPos4 = uMVMatrix * vec4(aVertexPosition, 1.0);
 			gl_Position = uPMatrix * vertPos4;

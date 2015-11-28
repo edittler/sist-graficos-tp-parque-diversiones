@@ -309,43 +309,19 @@ Vias.prototype = Object.create(ComplexModel.prototype);
 Vias.prototype.constructor = Vias;
 
 function Piso() {
-	//this.cuerpoRigido;
-	//this.groundMaterial;
-
 	var pisoSize = 2000;
 
-	//var material = new ColoredMaterial(Color.FORESTGREEN);
 	var material = new TexturedMaterial("images/green-grass-texture.jpg");
 	material.setNormalMap("images/green-grass-normalmap.jpg");
+	material.scale(28.0, 28.0);
 
 	Sprite.call(this, pisoSize, pisoSize, material);
 
 	this.translateZ(-10);
-
-	/*
-	// TODO creo que acá es en y = -10
-	// Plano del Suelo, ubicado en z = -10
-	this.groundMaterial = new CANNON.Material("groundMaterial");
-	var groundShape = new CANNON.Plane();
-	// masa 0 implica que el cuerpo tiene masa infinita
-	this.cuerpoRigido = new CANNON.RigidBody(0, groundShape, this._groundMaterial);
-	this.cuerpoRigido.useQuaternion = true;
-	this.cuerpoRigido.position.z = ConstantesTanque.ALTURA_PISO;
-	*/
 }
 
 Piso.prototype = Object.create(Sprite.prototype);
 Piso.prototype.constructor = Piso;
-
-/*
-Piso.prototype.getCuerpoRigido = function () {
-	return this.cuerpoRigido;
-};
-
-Piso.prototype.getMaterial = function () {
-	return this.groundMaterial;
-};
-*/
 
 /*
  * Base Sillas voladoras
@@ -535,6 +511,7 @@ SoporteGiratorio.prototype = (function () {
 
         this._timePass = 2500;
         this._orientation = 1;
+        this._count = 0;
 
     };
 
@@ -544,16 +521,22 @@ SoporteGiratorio.prototype = (function () {
 //@override
 SoporteGiratorio.prototype.update = function(elapsedTime) {
     ComplexModel.prototype.update.call(this, elapsedTime);
+    this.rotateX(Utils.degToRad(this._orientation * 30/200));
     this.rotateY(Utils.degToRad(elapsedTime/80));
-    this.rotateX(Utils.degToRad(this._orientation * elapsedTime/200));
-    if(this._timePass >= 5000) {
-        this._timePass = 0;
+    // this.rotateX(Utils.degToRad(this._orientation * elapsedTime/200));
+    // if(this._timePass >= 5000) {
+        // this._timePass = 0;
+        // this._orientation = this._orientation * -1;
+    // } else {
+        // this._timePass = this._timePass + elapsedTime;
+    // }
+    if(this._count > 100) {
+        this._count = 0;
         this._orientation = this._orientation * -1;
     } else {
-        this._timePass = this._timePass + elapsedTime;
+        this._count = this._count + 1;
     }
 };
-
 /*
  * Cabina de la vuelta al mundo
  */

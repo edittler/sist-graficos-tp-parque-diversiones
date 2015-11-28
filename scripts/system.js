@@ -2051,14 +2051,11 @@ function Texture(imgSrc) {
 	this.imageSrc = imgSrc; // nombre de la imagen de la que se extrae la textura
 }
 
-// Métodos públicos
 Texture.prototype.init = function (gl, repeat) {
 	var handleLoadedTexture = function (gl, texture, repeat) {
 		gl.bindTexture(gl.TEXTURE_2D, texture);
 		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
-		//gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-		//gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
 
@@ -2095,6 +2092,7 @@ Texture.prototype.bind = function (gl, id) {
 	gl.activeTexture(id);
 	gl.bindTexture(gl.TEXTURE_2D, this.glTexture);
 };
+
 /*
  * Material con textura
  */

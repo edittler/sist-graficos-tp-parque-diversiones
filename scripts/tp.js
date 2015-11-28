@@ -221,10 +221,10 @@ function MontaniaRusa() {
 
     var puntosControl = [
         [0,0,0], [100,0,200], [200,70,200], [300,0,200], 
-        // [40,0,0], [50,10,0], [60,20,0], [70,0,0], 
-        // [400,100,0], [200,20,0], [100,20,0], [50,20,0],
-        // [20,-10,0], [20,-20,0], [20,-50,0], [0,20,0],
-        // [0,20,0],[0,20,0],
+        [40,0,0], [50,10,0], [60,20,0], [70,0,0], 
+        [400,100,0], [200,20,0], [100,20,0], [50,20,0],
+        [20,-10,0], [20,-20,0], [20,-50,0], [0,20,0],
+        [0,20,0],[0,20,0],
     ];
 
 	this.vias = new Vias(puntosControl);
@@ -248,8 +248,8 @@ MontaniaRusa.prototype.getCarro = function () {
 /*
     Via
 */
-function Via( path , ratio, color) {
-    this.constructor(path,ratio,color);
+function Via( path , ratio, number, color) {
+    this.constructor(path,ratio,number,color);
 }
 
 // Métodos
@@ -257,17 +257,27 @@ Via.prototype = (function() {
     var pr = {}; // jshint ignore:line
     var pu = Object.create(PrimitiveModel.prototype);
 
-    pu.constructor = function( path , ratio, color) {
+    pu.constructor = function( path , ratio, number, color) {
         PrimitiveModel.prototype.constructor.call(this);
 
-        var tricirculo = new TriCircle(ratio);
+        // var tricirculo = new TriCircle(ratio);
+        var circle = new Circle(ratio);
+        if( number == 1) {
+            circle.translateY(10);
+        } else if(number == 2) {
+            circle.translateX(-5);
+        } else if (number == 3) {
+            circle.translateY(-10);
+        }
 
         var recorrido = new Path(8);
         recorrido.addStretch(new CubicBSpline(path));
         
-        var geometry = new SweptSurface(recorrido, tricirculo);
+        // var geometry = new SweptSurface(recorrido, tricirculo);
+        var geometry = new SweptSurface(recorrido, circle);
         geometry.setClosedShapes(false);
         geometry.setClosedEndings(false);
+        geometry.setCenteredInKernel(false);
 
         pu.init.call(this, geometry, new ColoredMaterial(color));
     };
@@ -285,9 +295,13 @@ Via.prototype = (function() {
 function Vias(path) {
 	ComplexModel.call(this);
 
-	var via = new Via(path ,1.6, Color.GREY);
+	var via1 = new Via(path ,1.6, 1, Color.GREY);
+	var via2 = new Via(path ,0.8, 2, Color.GREY);
+	var via3 = new Via(path ,1.6, 3, Color.GREY);
 
-	this.addChild(via);
+	this.addChild(via1);
+	this.addChild(via2);
+	this.addChild(via3);
 
 }
 

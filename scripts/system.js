@@ -1869,6 +1869,7 @@ var Color = Object.freeze({
 	GREY:		[0.5, 0.5, 0.5, 1.0],
 	LIGHTGREY:	[0.7, 0.7, 0.7, 1.0],
 	FORESTGREEN:	[0.13, 0.55, 0.13, 1.0],
+	CORNFLOWERBLUE:	[0.39, 0.58, 0.93, 1.0],
 	SKYBLUE:	[0.53, 0.81, 0.92, 1.0]
 });
 

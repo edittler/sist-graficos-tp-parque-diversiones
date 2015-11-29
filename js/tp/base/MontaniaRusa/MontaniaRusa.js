@@ -14,12 +14,14 @@ function MontaniaRusa() {
 
 	this.vias = new Vias(puntosControl);
 	this.carro = new Carro(puntosControl);
+	this.lago = new LagoArtificial();
 
 	var axis = new Axis();
 	axis.scale(30);
 
 	this.addChild(this.vias);
 	this.addChild(this.carro);
+	this.addChild(this.lago);
 	this.addChild(axis);
 }
 

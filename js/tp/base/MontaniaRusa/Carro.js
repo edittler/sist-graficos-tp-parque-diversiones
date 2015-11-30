@@ -4,7 +4,8 @@
 function Carro(path) {
 	ComplexModel.call(this);
 
-	this.curva = new CubicBSpline(path);
+	// this.curva = new CubicBSpline(path);
+	this.curva = new CubicBezier(path);
 
 	var precision = 24;
 

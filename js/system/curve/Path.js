@@ -50,7 +50,6 @@ Path.prototype.getPoints = function () {
 			points = points.concat(this.transform(curvePoints[p]));
 		}
 	}
-
 	return points;
 };
 

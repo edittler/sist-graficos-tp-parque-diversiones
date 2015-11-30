@@ -38,7 +38,7 @@ PointCloud.prototype.addSection = function (path, at) {
 	var initial = this.getSection(0);
 	if (Utils.isDefined(initial)) {
 		if (path.getPoints().length != initial.points.length) {
-			alert("Error: la sección adicional debe tener la misma cantidad de puntos que la inicial");
+			console.error("PointCloud: la sección adicional debe tener la misma cantidad de puntos que la inicial");
 			return;
 		}
 

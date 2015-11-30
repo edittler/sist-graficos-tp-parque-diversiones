@@ -27,7 +27,7 @@ CubicBezier.prototype.constructor = CubicBezier;
 CubicBezier.prototype.calculateContinuousPoints = function () {
 	// TODO: averiguar como encontrar el punto de union
 	// de los tramos de manera que queden C2 continuo
-	// alert("Error: bezier cúbica no soporta más de 4 puntos de control");
+	console.error("CubicBezier: bezier cúbica no soporta más de 4 puntos de control");
 };
 
 // @Override

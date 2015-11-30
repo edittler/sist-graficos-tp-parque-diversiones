@@ -716,7 +716,7 @@ CubicBezier.prototype.constructor = CubicBezier;
 CubicBezier.prototype.calculateContinuousPoints = function () {
 	// TODO: averiguar como encontrar el punto de union
 	// de los tramos de manera que queden C2 continuo
-	// alert("Error: bezier cúbica no soporta más de 4 puntos de control");
+	console.error("CubicBezier: bezier cúbica no soporta más de 4 puntos de control");
 };
 
 // @Override
@@ -1586,7 +1586,7 @@ PointCloud.prototype.addSection = function (path, at) {
 	var initial = this.getSection(0);
 	if (Utils.isDefined(initial)) {
 		if (path.getPoints().length != initial.points.length) {
-			alert("Error: la sección adicional debe tener la misma cantidad de puntos que la inicial");
+			console.error("PointCloud: la sección adicional debe tener la misma cantidad de puntos que la inicial");
 			return;
 		}
 
@@ -1869,7 +1869,6 @@ var Color = Object.freeze({
 	WHITE:		[1.0, 1.0, 1.0, 1.0],
 	GREY:		[0.5, 0.5, 0.5, 1.0],
 	LIGHTGREY:	[0.7, 0.7, 0.7, 1.0],
-	FORESTGREEN:	[0.13, 0.55, 0.13, 1.0],
 	CORNFLOWERBLUE:	[0.39, 0.58, 0.93, 1.0],
 	SKYBLUE:	[0.53, 0.81, 0.92, 1.0]
 });
@@ -2685,32 +2684,24 @@ NormalsGrapher.prototype.prepareToRender = function (gl) {
  * Poligono 2D plano, convexo (Star-shaped polygon) y centrado en el origen.
  * Recibe una figura (shape) y un color. Es un poliedro de 1 cara.
  */
-function Polygon(shape, color) {
+function Polygon(shape, material) {
 	PrimitiveModel.call(this);
 	this.points;
 	this.kernel;
 	this.fill = true; // si es false solo dibuja el contorno
 	this.closed = true;
-	this.color;
 
-	this.init(shape, color);
+	this.init(shape, material);
 }
 
 Polygon.prototype = Object.create(PrimitiveModel.prototype);
 Polygon.prototype.constructor = Polygon;
 
-Polygon.prototype.setColor = function (color) {
-	if (this.color != color) {
-		this.color = color;
-		this.setInitialized(false);
-	}
-};
-
-Polygon.prototype.init = function (shape, color) {
+Polygon.prototype.init = function (shape, material) {
 	if (Utils.isDefined(shape)) {
 		this.points = shape.getPoints();
 		this.kernel = shape.getKernelPoint();
-		this.color = color;
+		this.material = material;
 		this.setInitialized(false);
 	}
 };
@@ -2734,7 +2725,6 @@ Polygon.prototype.prepareToRender = function (gl) {
 	var normDir = [0, 0, 1];
 	var vertices = [0, 0, z];
 	var normals = normDir;
-	var colors = this.color;
 	var indexes = [];
 
 	if (this.fill) {
@@ -2749,7 +2739,6 @@ Polygon.prototype.prepareToRender = function (gl) {
 		vertices = vertices.concat([x, y, z]);
 		normals = normals.concat(normDir);
 		indexes = indexes.concat(p + 1);
-		colors = colors.concat(this.color);
 	}
 
 	if (this.closed) { // une el primer y último punto
@@ -2768,10 +2757,9 @@ Polygon.prototype.prepareToRender = function (gl) {
 	geometry.setNormals(normals);
 	geometry.setIndexes(indexes);
 
-	var material = new ColoredMaterial(this.color);
-	material.setColorMappings(colors);
+	this.material.genetareMappings(1, points.length + 1);
 
-	PrimitiveModel.prototype.init.call(this, geometry, material);
+	PrimitiveModel.prototype.init.call(this, geometry, this.material);
 	PrimitiveModel.prototype.prepareToRender.call(this, gl);
 };
 

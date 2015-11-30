@@ -237,6 +237,7 @@ function LagoArtificial() {
 		[10, 70, 0]
 	];
 
+	// Armo las paredes del lago
 	var forma = new Path(8);
 	forma.addStretch(new CubicBSpline(puntosControl));
 
@@ -246,13 +247,23 @@ function LagoArtificial() {
 
 	var geometry = new SweptSurface(recorrido, forma);
 	geometry.setClosedShapes(true);
-	geometry.setClosedEndings(true);
+	geometry.setClosedEndings(false);
 	var model = new PrimitiveModel(geometry, new ColoredMaterial(Color.CORNFLOWERBLUE));
-	
+
+	// Armo la superficie del lago
+	var material = new TexturedMaterial("images/water_texture.jpg");
+	material.scale(12.0, 12.0);
+	//var material = new ColoredMaterial(Color.GREY);
+	var agua = new Polygon(forma, material);
+	agua.translateZ(5);
+	agua.rotateY(Utils.degToRad(180));
+
+	// Agrego las partes al lago
 	this.addChild(model);
-	this.translateX(100);
-	this.translateY(-200);
-	this.translateZ(-50);
+	this.addChild(agua);
+	this.translateX(50);
+	this.translateY(-100);
+	//this.translateZ(-50);
 	this.scale(2);
 }
 
@@ -264,13 +275,26 @@ LagoArtificial.prototype.constructor = LagoArtificial;
 function MontaniaRusa() {
 	ComplexModel.call(this);
 
-    var puntosControl = [
-        [0,0,0], [100,0,200], [200,70,200], [300,0,200], 
-        [40,0,0], [50,10,0], [60,20,0], [70,0,0], 
-        [400,100,0], [200,20,0], [100,20,0], [50,20,0],
-        [20,-10,0], [20,-20,0], [20,-50,0], [0,20,0],
-        [0,20,0],[0,20,0],
-    ];
+	var primero = [200, 150, 40],
+		segundo = [100, 50, 40],
+		tercero = [50, 350, 40];
+	var puntosControl = [
+		primero,
+		segundo,
+		tercero,
+		[200, 250, 40],
+		[250, 300, 40],
+		[350, 400, 40],
+		[400, 300, 40],
+		[350, 250, 40],
+		[350, 150, 40],
+		[400, 100, 40],
+		[350, 50, 40],
+		[250, 150, 40],
+		primero,
+		segundo,
+		tercero,
+	];
 
 	this.vias = new Vias(puntosControl);
 	this.carro = new Carro(puntosControl);
@@ -317,7 +341,18 @@ Via.prototype = (function() {
             circle.translateY(-10);
         }
 
-        var recorrido = new Path(8);
+        var recorrido = new Path(10);
+        // recorrido.addStretch(new CubicBSpline(path));
+
+		/*
+        var path1 = [[0,100,0], [50,100,0], [100,50,0], [100,0,0],
+        [100,0,0], [100,-50,0], [50,0,-5], [10,0,-5]];
+		*/
+        // var path2 = [[300,200,200], [400,200,400], [450,-100,0], [70,0,0]];
+            // [400,100,0], [200,20,0], [100,20,0], [50,20,0],
+            // [20,-10,0], [20,-20,0], [20,-50,0], [0,20,0],
+            // [0,20,0],[0,20,0],
+        // ];
         recorrido.addStretch(new CubicBSpline(path));
         
         // var geometry = new SweptSurface(recorrido, tricirculo);
@@ -538,7 +573,7 @@ SoporteGiratorio.prototype = (function () {
 
         this._soporte = new Soporte();
 
-        var techo = new Polygon(new Circle(60), Color.RED);
+        var techo = new Polygon(new Circle(60), new ColoredMaterial(Color.RED));
         techo.translateY(20);
         techo.rotateX(Utils.degToRad(90));
 
@@ -1096,7 +1131,7 @@ function init() {
 	montaniaRusa = new MontaniaRusa();
 	montaniaRusa.translateX(-150);
 	montaniaRusa.translateY(200);
-	montaniaRusa.translateZ(50);
+	//montaniaRusa.translateZ(50);
 
 	escena = new Scene();
 

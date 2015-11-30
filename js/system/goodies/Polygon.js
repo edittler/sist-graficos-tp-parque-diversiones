@@ -2,32 +2,24 @@
  * Poligono 2D plano, convexo (Star-shaped polygon) y centrado en el origen.
  * Recibe una figura (shape) y un color. Es un poliedro de 1 cara.
  */
-function Polygon(shape, color) {
+function Polygon(shape, material) {
 	PrimitiveModel.call(this);
 	this.points;
 	this.kernel;
 	this.fill = true; // si es false solo dibuja el contorno
 	this.closed = true;
-	this.color;
 
-	this.init(shape, color);
+	this.init(shape, material);
 }
 
 Polygon.prototype = Object.create(PrimitiveModel.prototype);
 Polygon.prototype.constructor = Polygon;
 
-Polygon.prototype.setColor = function (color) {
-	if (this.color != color) {
-		this.color = color;
-		this.setInitialized(false);
-	}
-};
-
-Polygon.prototype.init = function (shape, color) {
+Polygon.prototype.init = function (shape, material) {
 	if (Utils.isDefined(shape)) {
 		this.points = shape.getPoints();
 		this.kernel = shape.getKernelPoint();
-		this.color = color;
+		this.material = material;
 		this.setInitialized(false);
 	}
 };
@@ -51,7 +43,6 @@ Polygon.prototype.prepareToRender = function (gl) {
 	var normDir = [0, 0, 1];
 	var vertices = [0, 0, z];
 	var normals = normDir;
-	var colors = this.color;
 	var indexes = [];
 
 	if (this.fill) {
@@ -66,7 +57,6 @@ Polygon.prototype.prepareToRender = function (gl) {
 		vertices = vertices.concat([x, y, z]);
 		normals = normals.concat(normDir);
 		indexes = indexes.concat(p + 1);
-		colors = colors.concat(this.color);
 	}
 
 	if (this.closed) { // une el primer y último punto
@@ -85,10 +75,9 @@ Polygon.prototype.prepareToRender = function (gl) {
 	geometry.setNormals(normals);
 	geometry.setIndexes(indexes);
 
-	var material = new ColoredMaterial(this.color);
-	material.setColorMappings(colors);
+	this.material.genetareMappings(1, points.length + 1);
 
-	PrimitiveModel.prototype.init.call(this, geometry, material);
+	PrimitiveModel.prototype.init.call(this, geometry, this.material);
 	PrimitiveModel.prototype.prepareToRender.call(this, gl);
 };
 

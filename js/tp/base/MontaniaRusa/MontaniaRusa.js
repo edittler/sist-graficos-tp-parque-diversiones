@@ -4,23 +4,36 @@
 function MontaniaRusa() {
 	ComplexModel.call(this);
 
-    var puntosControl = [
-        [0,0,0], [0,100,0], [200,200,0], [300,200,200], 
-        //[500,200,250], [600,200,100], [60,20,0], [70,0,0], 
-        // [400,100,0], [200,20,0], [100,20,0], [50,20,0],
-        // [20,-10,0], [20,-20,0], [20,-50,0], [0,20,0],
-        // [0,20,0],[0,20,0],
-    ];
+	var primero = [200, 150, 40],
+		segundo = [100, 50, 40],
+		tercero = [50, 350, 40];
+	var puntosControl = [
+		primero,
+		segundo,
+		tercero,
+		[200, 250, 40],
+		[250, 300, 40],
+		[350, 400, 40],
+		[400, 300, 40],
+		[350, 250, 40],
+		[350, 150, 40],
+		[400, 100, 40],
+		[350, 50, 40],
+		[250, 150, 40],
+		primero,
+		segundo,
+		tercero,
+	];
 
 	this.vias = new Vias(puntosControl);
-	// this.carro = new Carro(puntosControl);
+	this.carro = new Carro(puntosControl);
 	this.lago = new LagoArtificial();
 
 	var axis = new Axis();
 	axis.scale(30);
 
 	this.addChild(this.vias);
-	// this.addChild(this.carro);
+	this.addChild(this.carro);
 	this.addChild(this.lago);
 	this.addChild(axis);
 }

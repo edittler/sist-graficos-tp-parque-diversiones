@@ -22,6 +22,7 @@ function LagoArtificial() {
 		[10, 70, 0]
 	];
 
+	// Armo las paredes del lago
 	var forma = new Path(8);
 	forma.addStretch(new CubicBSpline(puntosControl));
 
@@ -31,13 +32,23 @@ function LagoArtificial() {
 
 	var geometry = new SweptSurface(recorrido, forma);
 	geometry.setClosedShapes(true);
-	geometry.setClosedEndings(true);
+	geometry.setClosedEndings(false);
 	var model = new PrimitiveModel(geometry, new ColoredMaterial(Color.CORNFLOWERBLUE));
 
+	// Armo la superficie del lago
+	var material = new TexturedMaterial("images/water_texture.jpg");
+	material.scale(12.0, 12.0);
+	//var material = new ColoredMaterial(Color.GREY);
+	var agua = new Polygon(forma, material);
+	agua.translateZ(5);
+	agua.rotateY(Utils.degToRad(180));
+
+	// Agrego las partes al lago
 	this.addChild(model);
-	this.translateX(100);
-	this.translateY(-200);
-	this.translateZ(-50);
+	this.addChild(agua);
+	this.translateX(50);
+	this.translateY(-100);
+	//this.translateZ(-50);
 	this.scale(2);
 }
 

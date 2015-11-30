@@ -18,7 +18,7 @@ SoporteGiratorio.prototype = (function () {
 
         this._soporte = new Soporte();
 
-        var techo = new Polygon(new Circle(60), Color.RED);
+        var techo = new Polygon(new Circle(60), new ColoredMaterial(Color.RED));
         techo.translateY(20);
         techo.rotateX(Utils.degToRad(90));
 

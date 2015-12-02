@@ -15,7 +15,12 @@ function Canio(length) {
 	geometry.setClosedShapes(true);
 	geometry.setClosedEndings(true);
 
-	this.init(geometry, new ColoredMaterial(Color.GREY));
+	// var material = new ColoredMaterial(Color.GREY);
+	var material = new TexturedMaterial("images/metal.jpg");
+	material.scale(3,1);
+	material.translate(0,-0.4);
+
+	this.init(geometry, material);
 }
 
 Canio.prototype = Object.create(PrimitiveModel.prototype);

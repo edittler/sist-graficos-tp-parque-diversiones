@@ -362,8 +362,8 @@ MontaniaRusa.prototype.getCarro = function () {
 /*
     Via
 */
-function Via( path , ratio, number, color) {
-    this.constructor(path,ratio,number,color);
+function Via( path , ratio, number, material) {
+    this.constructor(path,ratio,number,material);
 }
 
 // Métodos
@@ -371,7 +371,7 @@ Via.prototype = (function() {
     var pr = {}; // jshint ignore:line
     var pu = Object.create(PrimitiveModel.prototype);
 
-    pu.constructor = function( path , ratio, number, color) {
+    pu.constructor = function( path , ratio, number, material) {
         PrimitiveModel.prototype.constructor.call(this);
 
         // var tricirculo = new TriCircle(ratio);
@@ -405,7 +405,7 @@ Via.prototype = (function() {
         geometry.setClosedEndings(false);
         geometry.setCenteredInKernel(false);
 
-        pu.init.call(this, geometry, new ColoredMaterial(color));
+        pu.init.call(this, geometry, material);
     };
 
     // Métodos privados
@@ -421,9 +421,13 @@ Via.prototype = (function() {
 function Vias(path) {
 	ComplexModel.call(this);
 
-	var via1 = new Via(path ,1.6, 1, Color.GREY);
-	var via2 = new Via(path ,0.8, 2, Color.GREY);
-	var via3 = new Via(path ,1.6, 3, Color.GREY);
+	var material = new TexturedMaterial("images/metal.jpg");
+	material.scale(3,1);
+	material.translate(0,-0.4);
+
+	var via1 = new Via(path ,1.6, 1, material);
+	var via2 = new Via(path ,0.8, 2, material);
+	var via3 = new Via(path ,1.6, 3, material);
 
 	this.addChild(via1);
 	this.addChild(via2);
@@ -758,7 +762,12 @@ function Canio(length) {
 	geometry.setClosedShapes(true);
 	geometry.setClosedEndings(true);
 
-	this.init(geometry, new ColoredMaterial(Color.GREY));
+	// var material = new ColoredMaterial(Color.GREY);
+	var material = new TexturedMaterial("images/metal.jpg");
+	material.scale(3,1);
+	material.translate(0,-0.4);
+
+	this.init(geometry, material);
 }
 
 Canio.prototype = Object.create(PrimitiveModel.prototype);
@@ -919,7 +928,7 @@ ParedCabina.prototype.constructor = ParedCabina;
 /*
  * Soporte de la Vuelta al mundo
  */
-function SoporteLateral() {
+function SoporteLateral(material) {
 	PrimitiveModel.call(this);
 
 	var alto = 65;
@@ -933,7 +942,7 @@ function SoporteLateral() {
 	geometry.setClosedShapes(true);
 	geometry.setClosedEndings(true);
 
-	this.init(geometry, new ColoredMaterial(Color.GREY));
+	this.init(geometry, material);
 	this.rotateY(Utils.degToRad(90));
 	this.rotateZ(Utils.degToRad(90));
 	this.translateY(alto/2);
@@ -945,7 +954,7 @@ SoporteLateral.prototype.constructor = SoporteLateral;
 /*
  * Vuelta al mundo
  */
-function VueltaAlMundo() {
+function VueltaAlMundo(material) {
 	ComplexModel.call(this);
 
 	var anchoEstructura = 10;
@@ -954,11 +963,11 @@ function VueltaAlMundo() {
 
 	var desplazamientoSoporte = anchoEstructura/2 + 2;
 	var desplazamientoAlSuelo = -11;
-	this.soporteDerecho = new SoporteLateral();
+	this.soporteDerecho = new SoporteLateral(material);
 	this.soporteDerecho.translateZ(-desplazamientoSoporte);
 	this.soporteDerecho.translateY(desplazamientoAlSuelo);
 
-	this.soporteIzquierdo = new SoporteLateral();
+	this.soporteIzquierdo = new SoporteLateral(material);
 	this.soporteIzquierdo.translateZ(desplazamientoSoporte);
 	this.soporteIzquierdo.translateY(desplazamientoAlSuelo);
 
@@ -1164,7 +1173,16 @@ function init() {
 	fondo = new Fondo();
 	fondo.translateY(200);
 
-	vueltaAlMundo = new VueltaAlMundo();
+	var material = new TexturedMaterial("images/metal.jpg");
+	// material.setShininess(1.0);
+	material.scale(3,1);
+	material.translate(0,-0.4);
+	var images = ["images/beach/front.jpg", "images/beach/back.jpg",
+	              "images/green-grass-texture.jpg", "images/beach/top.jpg",
+	              "images/beach/left.jpg", "images/beach/right.jpg"];
+	material.setCubeMap(images, 1.0);
+
+	vueltaAlMundo = new VueltaAlMundo(material);
 	vueltaAlMundo.translateX(100);
 
 	sillasVoladoras = new SillasVoladoras();

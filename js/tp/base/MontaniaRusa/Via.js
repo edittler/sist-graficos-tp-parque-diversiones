@@ -1,8 +1,8 @@
 /*
     Via
 */
-function Via( path , ratio, number, color) {
-    this.constructor(path,ratio,number,color);
+function Via( path , ratio, number, material) {
+    this.constructor(path,ratio,number,material);
 }
 
 // Métodos
@@ -10,7 +10,7 @@ Via.prototype = (function() {
     var pr = {}; // jshint ignore:line
     var pu = Object.create(PrimitiveModel.prototype);
 
-    pu.constructor = function( path , ratio, number, color) {
+    pu.constructor = function( path , ratio, number, material) {
         PrimitiveModel.prototype.constructor.call(this);
 
         // var tricirculo = new TriCircle(ratio);
@@ -44,7 +44,7 @@ Via.prototype = (function() {
         geometry.setClosedEndings(false);
         geometry.setCenteredInKernel(false);
 
-        pu.init.call(this, geometry, new ColoredMaterial(color));
+        pu.init.call(this, geometry, material);
     };
 
     // Métodos privados

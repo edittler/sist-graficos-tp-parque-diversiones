@@ -67,8 +67,9 @@ function Carro(path) {
 
 	this.puntos = this.curva.getPoints(precision);
 	this.derivadas = this.curva.getDerivativePoints(precision);
-	this.recorrido = new Path(8);
+	this.recorrido = new Path(10);
 	this.recorrido.addStretch(this.curva);
+	this.kernel = this.recorrido.getKernelPoint();
 
 	var material = new ColoredMaterial(Color.RED);
 	var ancho = 10;
@@ -86,6 +87,8 @@ function Carro(path) {
 	this.direccion = vec3.fromValues(1.000001, 0.000001, 0.000001);
 	vec3.normalize(this.direccion, this.direccion);
 	this.distanciaRecorrida = 0;
+
+	this.translateVector = null;
 }
 
 Carro.prototype = Object.create(ComplexModel.prototype);
@@ -94,6 +97,11 @@ Carro.prototype.constructor = Carro;
 //@override
 Carro.prototype.update = function (elapsedTime) {
 	ComplexModel.prototype.update.call(this, elapsedTime);
+
+	// seteo como vector de traslacion al primer vector
+	if(this.translateVector === null) {
+		this.translateVector = this.getPosition();
+	}
 
 	//posVec,tanVec,nrmVec,binVec
 
@@ -122,7 +130,9 @@ Carro.prototype.update = function (elapsedTime) {
 	vec3.cross(nrm, tan, bin);
 	*/
 
-	this.setPosition(point[0], point[1], point[2]);
+	// corrijo por el kernel para que vaya sobre las vias de la montania rusa
+	// corrijo por la primer traslacion aplicada
+	this.setPosition(point[0] - this.kernel[0] + this.translateVector[0], point[1] - this.kernel[1] + this.translateVector[1], point[2] - this.kernel[2] + this.translateVector[2]);
 	this.rotateZ(this.angleZ(tan));
 	//this.rotateY(this.angleY(tan));
 	this.rotateY(this.angleX(tan) - Math.PI / 2);
@@ -305,22 +315,22 @@ LagoArtificial.prototype.constructor = LagoArtificial;
 function MontaniaRusa() {
 	ComplexModel.call(this);
 
-	var primero = [200, 150, 40],
-		segundo = [100, 50, 40],
-		tercero = [50, 350, 40];
+	var primero = [200, 150, 110],
+		segundo = [100, 50, 110],
+		tercero = [50, 350, 110];
 	var puntosControl = [
 		primero,
 		segundo,
 		tercero,
-		[200, 250, 40],
-		[250, 300, 40],
-		[350, 400, 40],
-		[400, 300, 40],
-		[350, 250, 40],
-		[350, 150, 40],
-		[400, 100, 40],
-		[350, 50, 40],
-		[250, 150, 40],
+		[200, 250, 110],
+		[250, 300, 110],
+		[350, 400, 110],
+		[400, 300, 110],
+		[350, 250, 110],
+		[350, 150, 110],
+		[400, 100, 150],
+		[350, 50, 150],
+		[250, 150, 150],
 		primero,
 		segundo,
 		tercero,
@@ -329,6 +339,9 @@ function MontaniaRusa() {
 	this.vias = new Vias(puntosControl);
 	this.carro = new Carro(puntosControl);
 	this.lago = new LagoArtificial();
+
+	this.vias.translateZ(100);
+	this.carro.translateZ(100);
 
 	var axis = new Axis();
 	axis.scale(30);
@@ -364,11 +377,11 @@ Via.prototype = (function() {
         // var tricirculo = new TriCircle(ratio);
         var circle = new Circle(ratio);
         if( number == 1) {
-            circle.translateY(10);
+            circle.translateX(10);
         } else if(number == 2) {
-            circle.translateX(-5);
+            circle.translateY(-5);
         } else if (number == 3) {
-            circle.translateY(-10);
+            circle.translateX(-10);
         }
 
         var recorrido = new Path(10);
@@ -387,6 +400,7 @@ Via.prototype = (function() {
         
         // var geometry = new SweptSurface(recorrido, tricirculo);
         var geometry = new SweptSurface(recorrido, circle);
+        geometry.setUpVector([0,0,1]);
         geometry.setClosedShapes(false);
         geometry.setClosedEndings(false);
         geometry.setCenteredInKernel(false);

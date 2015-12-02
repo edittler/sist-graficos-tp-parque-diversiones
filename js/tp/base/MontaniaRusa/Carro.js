@@ -10,8 +10,9 @@ function Carro(path) {
 
 	this.puntos = this.curva.getPoints(precision);
 	this.derivadas = this.curva.getDerivativePoints(precision);
-	this.recorrido = new Path(8);
+	this.recorrido = new Path(10);
 	this.recorrido.addStretch(this.curva);
+	this.kernel = this.recorrido.getKernelPoint();
 
 	var material = new ColoredMaterial(Color.RED);
 	var ancho = 10;
@@ -29,6 +30,8 @@ function Carro(path) {
 	this.direccion = vec3.fromValues(1.000001, 0.000001, 0.000001);
 	vec3.normalize(this.direccion, this.direccion);
 	this.distanciaRecorrida = 0;
+
+	this.translateVector = null;
 }
 
 Carro.prototype = Object.create(ComplexModel.prototype);
@@ -37,6 +40,11 @@ Carro.prototype.constructor = Carro;
 //@override
 Carro.prototype.update = function (elapsedTime) {
 	ComplexModel.prototype.update.call(this, elapsedTime);
+
+	// seteo como vector de traslacion al primer vector
+	if(this.translateVector === null) {
+		this.translateVector = this.getPosition();
+	}
 
 	//posVec,tanVec,nrmVec,binVec
 
@@ -65,7 +73,9 @@ Carro.prototype.update = function (elapsedTime) {
 	vec3.cross(nrm, tan, bin);
 	*/
 
-	this.setPosition(point[0], point[1], point[2]);
+	// corrijo por el kernel para que vaya sobre las vias de la montania rusa
+	// corrijo por la primer traslacion aplicada
+	this.setPosition(point[0] - this.kernel[0] + this.translateVector[0], point[1] - this.kernel[1] + this.translateVector[1], point[2] - this.kernel[2] + this.translateVector[2]);
 	this.rotateZ(this.angleZ(tan));
 	//this.rotateY(this.angleY(tan));
 	this.rotateY(this.angleX(tan) - Math.PI / 2);

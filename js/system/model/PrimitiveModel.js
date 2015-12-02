@@ -83,7 +83,7 @@ PrimitiveModel.prototype.init = function (geometry, material) {
 		// genera los atributos de color o textura según el caso
 		var levels = this.geometry.levels;
 		var faces = this.geometry.faces;
-		this.material.genetareMappings(levels, faces);
+		this.material.generateMappings(levels, faces);
 
 		// obtiene el shader program a utilizar
 		this.shaderProgram = this.material.getShaderProgram();

@@ -283,8 +283,7 @@ function LagoArtificial() {
 
 	// Armo la superficie del lago
 	var material = new TexturedMaterial("images/water_texture.jpg");
-	material.scale(12.0, 12.0);
-	//var material = new ColoredMaterial(Color.GREY);
+	material.scale(200.0, 200.0);
 	var agua = new Polygon(forma, material);
 	agua.translateZ(5);
 	agua.rotateY(Utils.degToRad(180));

@@ -59,7 +59,7 @@ Material.prototype.drawMaterial = function (gl) {
 	}
 };
 
-Material.prototype.genetareMappings = function (levels, faces) { // jshint ignore:line
+Material.prototype.generateMappings = function (levels, faces) { // jshint ignore:line
 	console.error("Error: Abstract method not implemented");
 };
 

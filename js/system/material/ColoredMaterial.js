@@ -19,7 +19,7 @@ ColoredMaterial.prototype.setColorMappings = function (colors) {
 };
 
 // @override
-ColoredMaterial.prototype.genetareMappings = function (levels, faces) {
+ColoredMaterial.prototype.generateMappings = function (levels, faces) {
 	if (this.vertexMapping.length === 0) {
 		for (var c = 0; c < levels * faces; c++) {
 			this.vertexMapping = this.vertexMapping.concat(this.color);

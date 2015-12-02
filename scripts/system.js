@@ -190,6 +190,18 @@ if (window.addEventListener) { // firefox
 }
 // ie, opera
 window.onmousewheel = document.onmousewheel = Mouse.onMouseWheel;
+/**
+ * Extensión del array nativo de JS
+ */
+
+Float32Array.prototype.max = function () {
+	return Math.max.apply(null, this);
+};
+
+Float32Array.prototype.min = function () {
+	return Math.min.apply(null, this);
+};
+
 /*
  * Encapsula todo el tratamiento del contexto gl y el canvas
  */
@@ -1894,7 +1906,7 @@ ColoredMaterial.prototype.setColorMappings = function (colors) {
 };
 
 // @override
-ColoredMaterial.prototype.genetareMappings = function (levels, faces) {
+ColoredMaterial.prototype.generateMappings = function (levels, faces) {
 	if (this.vertexMapping.length === 0) {
 		for (var c = 0; c < levels * faces; c++) {
 			this.vertexMapping = this.vertexMapping.concat(this.color);
@@ -2027,7 +2039,7 @@ Material.prototype.drawMaterial = function (gl) {
 	}
 };
 
-Material.prototype.genetareMappings = function (levels, faces) { // jshint ignore:line
+Material.prototype.generateMappings = function (levels, faces) { // jshint ignore:line
 	console.error("Error: Abstract method not implemented");
 };
 
@@ -2187,7 +2199,7 @@ TexturedMaterial.prototype.drawMaterial = function (gl) {
 };
 
 // @override
-TexturedMaterial.prototype.genetareMappings = function (levels, faces) {
+TexturedMaterial.prototype.generateMappings = function (levels, faces) {
 	if (this.vertexMapping.length === 0) {
 		for (var n = 0; n < levels; n++) {
 			for (var c = 0; c < faces; c++) {
@@ -2360,7 +2372,7 @@ PrimitiveModel.prototype.init = function (geometry, material) {
 		// genera los atributos de color o textura según el caso
 		var levels = this.geometry.levels;
 		var faces = this.geometry.faces;
-		this.material.genetareMappings(levels, faces);
+		this.material.generateMappings(levels, faces);
 
 		// obtiene el shader program a utilizar
 		this.shaderProgram = this.material.getShaderProgram();
@@ -2680,7 +2692,7 @@ NormalsGrapher.prototype.prepareToRender = function (gl) {
 	this.init(geometry, material);
 	PrimitiveModel.prototype.prepareToRender.call(this, gl);
 };
-/*
+/**
  * Poligono 2D plano, convexo (Star-shaped polygon) y centrado en el origen.
  * Recibe una figura (shape) y un color. Es un poliedro de 1 cara.
  */
@@ -2714,6 +2726,45 @@ Polygon.prototype.fillPolygon = function (fill) {
 Polygon.prototype.closedPolygon = function (closed) {
 	this.closed = closed;
 	this.setInitialized(false);
+};
+
+// Private
+Polygon.prototype.generateMaterialMappings = function () {
+	if (this.material.constructor.name === "ColoredMaterial") {
+		console.log(this.material.constructor.name);
+		this.material.generateMappings(1, this.points.length + 1);
+	} else if (this.material.constructor.name === "TexturedMaterial") {
+		console.log(this.material.constructor.name);
+		var xvalues =  new Float32Array(this.points.length),
+			yvalues =  new Float32Array(this.points.length);
+		for (var i = 0; i < this.points.length; i++) {
+			xvalues[i] = this.points[i][0];
+			yvalues[i] = this.points[i][1];
+		}
+		var xlength = xvalues.max() - xvalues.min();
+		var ylength = yvalues.max() - yvalues.min();
+
+		var vertexMapping = [];
+
+		for (var j = 0; j < this.points.length; j++) {
+			var n = this.points[j][0];
+			var m = this.points[j][1];
+			var u = n / xlength;
+			var v = m / ylength;
+
+			var vec = vec2.fromValues(u, v);
+			//vec2.transformMat3(vec, vec, this.material.transforms);
+			vertexMapping = vertexMapping.concat([vec[0], vec[1]]);
+		}
+
+		var firstu = xlength / 2;
+		var firstv = ylength / 2;
+		var firstvec = vec2.fromValues(firstu, firstv);
+		//vec2.transformMat3(firstvec, firstvec, this.material.transforms);
+		vertexMapping = vertexMapping.concat([firstvec[0], firstvec[1]]);
+
+		this.material.setTextureMappings(vertexMapping);
+	}
 };
 
 // @override
@@ -2757,7 +2808,7 @@ Polygon.prototype.prepareToRender = function (gl) {
 	geometry.setNormals(normals);
 	geometry.setIndexes(indexes);
 
-	this.material.genetareMappings(1, points.length + 1);
+	this.generateMaterialMappings();
 
 	PrimitiveModel.prototype.init.call(this, geometry, this.material);
 	PrimitiveModel.prototype.prepareToRender.call(this, gl);

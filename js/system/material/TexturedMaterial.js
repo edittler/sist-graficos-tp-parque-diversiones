@@ -91,7 +91,7 @@ TexturedMaterial.prototype.drawMaterial = function (gl) {
 };
 
 // @override
-TexturedMaterial.prototype.genetareMappings = function (levels, faces) {
+TexturedMaterial.prototype.generateMappings = function (levels, faces) {
 	if (this.vertexMapping.length === 0) {
 		for (var n = 0; n < levels; n++) {
 			for (var c = 0; c < faces; c++) {

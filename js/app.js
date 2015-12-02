@@ -36,7 +36,7 @@ function init() {
 	piso = new Piso();
 
 	fondo = new Fondo();
-	fondo.translateY(200);
+	fondo.translateZ(-150);
 
 	vueltaAlMundo = new VueltaAlMundo();
 	vueltaAlMundo.translateX(100);

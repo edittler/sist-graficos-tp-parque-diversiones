@@ -17,30 +17,43 @@ function Fondo() {
 	// Sprite.call(this, 2048, 2048, material);
 	// this.geometry.setClosedEndings(true);
 
-	var front = new Sprite(2048,2048,new TexturedMaterial("images/beach/front.jpg"));
-	var back = new Sprite(2048,2048,new TexturedMaterial("images/beach/back.jpg"));
-	var left = new Sprite(2048,2048,new TexturedMaterial("images/beach/left.jpg"));
-	var right = new Sprite(2048,2048,new TexturedMaterial("images/beach/right.jpg"));
-	var top = new Sprite(2048,2048,new TexturedMaterial("images/beach/top.jpg"));
+	var frontTexture = new TexturedMaterial("images/beach/front.jpg");
+	frontTexture.setLightSupport(false);
+	var backTexture = new TexturedMaterial("images/beach/back.jpg");
+	backTexture.setLightSupport(false);
+	var leftTexture = new TexturedMaterial("images/beach/left.jpg");
+	leftTexture.setLightSupport(false);
+	var rightTexture = new TexturedMaterial("images/beach/right.jpg");
+	rightTexture.setLightSupport(false);
+	var topTexture = new TexturedMaterial("images/beach/top.jpg");
+	topTexture.setLightSupport(false);
 
-	front.translateX(1024);
+	var size = 2048;
+	var front = new Sprite(size, size, frontTexture);
+	var back = new Sprite(size, size, backTexture);
+	var left = new Sprite(size, size, leftTexture);
+	var right = new Sprite(size, size, rightTexture);
+	var top = new Sprite(size, size, topTexture);
+
+	front.translateX(size/2);
 	front.rotateZ(Utils.degToRad(180));
 	front.rotateX(Utils.degToRad(90));
 	front.rotateY(Utils.degToRad(90));
 
-	back.translateX(-1024);
+	back.translateX(-size/2);
 	back.rotateX(Utils.degToRad(90));
 	back.rotateY(Utils.degToRad(90));
 
-	left.translateY(-1024);
+	left.translateY(-size/2);
 	left.rotateZ(Utils.degToRad(180));
 	left.rotateX(Utils.degToRad(90));
 
-	right.translateY(1024);
+	right.translateY(size/2);
 	right.rotateX(Utils.degToRad(90));
 
-	top.translateZ(1024);
-	top.rotateZ(Utils.degToRad(180));
+	top.translateZ(size/2);
+	top.rotateZ(Utils.degToRad(90));
+	top.rotateX(Utils.degToRad(180));
 
 	this.addChild(front);
 	this.addChild(left);

@@ -88,6 +88,7 @@
 		"Via": true,
 		"TriCircle": true,
 		"Vias": true,
+		"Columna": true,
 		"Carro": true,
 		"LagoArtificial": true,
 		"MontaniaRusa": true

@@ -36,6 +36,7 @@ function MontaniaRusa() {
 	axis.scale(30);
 
 	this.addChild(this.vias);
+	this.addColumnas(puntosControl);
 	this.addChild(this.carro);
 	this.addChild(this.lago);
 	this.addChild(axis);
@@ -46,4 +47,21 @@ MontaniaRusa.prototype.constructor = MontaniaRusa;
 
 MontaniaRusa.prototype.getCarro = function () {
 	return this.carro;
+};
+
+MontaniaRusa.prototype.addColumnas = function(puntosDeControl) {
+	var precision = 2;
+	var curva = new CubicBSpline(puntosDeControl);
+	var puntos = curva.getPoints(precision);
+	var recorrido = new Path(10);
+	recorrido.addStretch(curva);
+	var kernel = recorrido.getKernelPoint();
+	var translateVector = this.getPosition();
+
+	for (var i = 0; i < puntos.length; i++) {
+		var point = puntos[i];
+		var columna = new Columna(kernel[2] + 30);
+		columna.setPosition(point[0] - kernel[0] + translateVector[0], point[1] - kernel[1] + translateVector[1], 21 + point[2] - kernel[2] + translateVector[2]);
+		this.addChild(columna);
+	}
 };

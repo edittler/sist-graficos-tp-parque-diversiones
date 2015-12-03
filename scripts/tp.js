@@ -268,6 +268,34 @@ Carro.prototype.rotarAlPlanoYZ = function (vec) {
 };
 
 /*
+ * Columna
+ */
+function Columna(length) {
+	PrimitiveModel.call(this);
+
+	var path = [[0,0,0], [0,0,length]];
+	var tamanio = 1;
+	var forma = new Circle(tamanio);
+
+	var recorrido = new Path(8);
+	recorrido.addStretch(new LinearCurve(path));
+
+	var geometry = new SweptSurface(recorrido, forma);
+	geometry.setClosedShapes(true);
+	geometry.setClosedEndings(true);
+
+	// var material = new ColoredMaterial(Color.GREY);
+	var material = new TexturedMaterial("images/metal.jpg");
+	material.scale(3, 1);
+	material.translate(0, -0.4);
+
+	this.init(geometry, material);
+}
+
+Columna.prototype = Object.create(PrimitiveModel.prototype);
+
+Columna.prototype.constructor = Columna;
+/*
  * Lago Artificial
  */
 function LagoArtificial() {
@@ -360,6 +388,7 @@ function MontaniaRusa() {
 	axis.scale(30);
 
 	this.addChild(this.vias);
+	this.addColumnas(puntosControl);
 	this.addChild(this.carro);
 	this.addChild(this.lago);
 	this.addChild(axis);
@@ -370,6 +399,23 @@ MontaniaRusa.prototype.constructor = MontaniaRusa;
 
 MontaniaRusa.prototype.getCarro = function () {
 	return this.carro;
+};
+
+MontaniaRusa.prototype.addColumnas = function(puntosDeControl) {
+	var precision = 2;
+	var curva = new CubicBSpline(puntosDeControl);
+	var puntos = curva.getPoints(precision);
+	var recorrido = new Path(10);
+	recorrido.addStretch(curva);
+	var kernel = recorrido.getKernelPoint();
+	var translateVector = this.getPosition();
+	
+	for (var i = 0; i < puntos.length; i++) {
+		var point = puntos[i];
+		var columna = new Columna(kernel[2] + 30);
+		columna.setPosition(point[0] - kernel[0] + translateVector[0], point[1] - kernel[1] + translateVector[1], 21 + point[2] - kernel[2] + translateVector[2]);
+		this.addChild(columna);
+	}
 };
 
 /*
@@ -398,20 +444,9 @@ Via.prototype = (function() {
         }
 
         var recorrido = new Path(10);
-        // recorrido.addStretch(new CubicBSpline(path));
 
-		/*
-        var path1 = [[0,100,0], [50,100,0], [100,50,0], [100,0,0],
-        [100,0,0], [100,-50,0], [50,0,-5], [10,0,-5]];
-		*/
-        // var path2 = [[300,200,200], [400,200,400], [450,-100,0], [70,0,0]];
-            // [400,100,0], [200,20,0], [100,20,0], [50,20,0],
-            // [20,-10,0], [20,-20,0], [20,-50,0], [0,20,0],
-            // [0,20,0],[0,20,0],
-        // ];
         recorrido.addStretch(new CubicBSpline(path));
-        
-        // var geometry = new SweptSurface(recorrido, tricirculo);
+
         var geometry = new SweptSurface(recorrido, circle);
         geometry.setUpVector([0,0,1]);
         geometry.setClosedShapes(false);

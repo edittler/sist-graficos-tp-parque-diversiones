@@ -38,7 +38,16 @@ function init() {
 	fondo = new Fondo();
 	fondo.translateZ(-150);
 
-	vueltaAlMundo = new VueltaAlMundo();
+	var material = new TexturedMaterial("images/metal.jpg");
+	// material.setShininess(1.0);
+	material.scale(3,1);
+	material.translate(0,-0.4);
+	var images = ["images/beach/front.jpg", "images/beach/back.jpg",
+	              "images/green-grass-texture.jpg", "images/beach/top.jpg",
+	              "images/beach/left.jpg", "images/beach/right.jpg"];
+	material.setCubeMap(images, 1.0);
+
+	vueltaAlMundo = new VueltaAlMundo(material);
 	vueltaAlMundo.translateX(100);
 
 	sillasVoladoras = new SillasVoladoras();

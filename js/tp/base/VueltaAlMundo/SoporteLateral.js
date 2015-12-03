@@ -1,7 +1,7 @@
 /*
  * Soporte de la Vuelta al mundo
  */
-function SoporteLateral() {
+function SoporteLateral(material) {
 	PrimitiveModel.call(this);
 
 	var alto = 65;
@@ -15,7 +15,7 @@ function SoporteLateral() {
 	geometry.setClosedShapes(true);
 	geometry.setClosedEndings(true);
 
-	this.init(geometry, new ColoredMaterial(Color.GREY));
+	this.init(geometry, material);
 	this.rotateY(Utils.degToRad(90));
 	this.rotateZ(Utils.degToRad(90));
 	this.translateY(alto/2);

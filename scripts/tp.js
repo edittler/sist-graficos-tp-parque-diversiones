@@ -80,8 +80,9 @@ function Carro(path) {
 
 	this.puntos = this.curva.getPoints(precision);
 	this.derivadas = this.curva.getDerivativePoints(precision);
-	this.recorrido = new Path(8);
+	this.recorrido = new Path(10);
 	this.recorrido.addStretch(this.curva);
+	this.kernel = this.recorrido.getKernelPoint();
 
 	var material = new ColoredMaterial(Color.RED);
 	var ancho = 10;
@@ -99,6 +100,8 @@ function Carro(path) {
 	this.direccion = vec3.fromValues(1.000001, 0.000001, 0.000001);
 	vec3.normalize(this.direccion, this.direccion);
 	this.distanciaRecorrida = 0;
+
+	this.translateVector = null;
 }
 
 Carro.prototype = Object.create(ComplexModel.prototype);
@@ -107,6 +110,11 @@ Carro.prototype.constructor = Carro;
 //@override
 Carro.prototype.update = function (elapsedTime) {
 	ComplexModel.prototype.update.call(this, elapsedTime);
+
+	// seteo como vector de traslacion al primer vector
+	if(this.translateVector === null) {
+		this.translateVector = this.getPosition();
+	}
 
 	//posVec,tanVec,nrmVec,binVec
 
@@ -135,7 +143,9 @@ Carro.prototype.update = function (elapsedTime) {
 	vec3.cross(nrm, tan, bin);
 	*/
 
-	this.setPosition(point[0], point[1], point[2]);
+	// corrijo por el kernel para que vaya sobre las vias de la montania rusa
+	// corrijo por la primer traslacion aplicada
+	this.setPosition(point[0] - this.kernel[0] + this.translateVector[0], point[1] - this.kernel[1] + this.translateVector[1], point[2] - this.kernel[2] + this.translateVector[2]);
 	this.rotateZ(this.angleZ(tan));
 	//this.rotateY(this.angleY(tan));
 	this.rotateY(this.angleX(tan) - Math.PI / 2);
@@ -318,22 +328,22 @@ LagoArtificial.prototype.constructor = LagoArtificial;
 function MontaniaRusa() {
 	ComplexModel.call(this);
 
-	var primero = [200, 150, 40],
-		segundo = [100, 50, 40],
-		tercero = [50, 350, 40];
+	var primero = [200, 150, 110],
+		segundo = [100, 50, 110],
+		tercero = [50, 350, 110];
 	var puntosControl = [
 		primero,
 		segundo,
 		tercero,
-		[200, 250, 40],
-		[250, 300, 40],
-		[350, 400, 40],
-		[400, 300, 40],
-		[350, 250, 40],
-		[350, 150, 40],
-		[400, 100, 40],
-		[350, 50, 40],
-		[250, 150, 40],
+		[200, 250, 110],
+		[250, 300, 110],
+		[350, 400, 110],
+		[400, 300, 110],
+		[350, 250, 110],
+		[350, 150, 110],
+		[400, 100, 150],
+		[350, 50, 150],
+		[250, 150, 150],
 		primero,
 		segundo,
 		tercero,
@@ -342,6 +352,9 @@ function MontaniaRusa() {
 	this.vias = new Vias(puntosControl);
 	this.carro = new Carro(puntosControl);
 	this.lago = new LagoArtificial();
+
+	this.vias.translateZ(100);
+	this.carro.translateZ(100);
 
 	var axis = new Axis();
 	axis.scale(30);
@@ -362,8 +375,8 @@ MontaniaRusa.prototype.getCarro = function () {
 /*
     Via
 */
-function Via( path , ratio, number, color) {
-    this.constructor(path,ratio,number,color);
+function Via( path , ratio, number, material) {
+    this.constructor(path,ratio,number,material);
 }
 
 // Métodos
@@ -371,17 +384,17 @@ Via.prototype = (function() {
     var pr = {}; // jshint ignore:line
     var pu = Object.create(PrimitiveModel.prototype);
 
-    pu.constructor = function( path , ratio, number, color) {
+    pu.constructor = function( path , ratio, number, material) {
         PrimitiveModel.prototype.constructor.call(this);
 
         // var tricirculo = new TriCircle(ratio);
         var circle = new Circle(ratio);
         if( number == 1) {
-            circle.translateY(10);
+            circle.translateX(10);
         } else if(number == 2) {
-            circle.translateX(-5);
+            circle.translateY(-5);
         } else if (number == 3) {
-            circle.translateY(-10);
+            circle.translateX(-10);
         }
 
         var recorrido = new Path(10);
@@ -400,11 +413,12 @@ Via.prototype = (function() {
         
         // var geometry = new SweptSurface(recorrido, tricirculo);
         var geometry = new SweptSurface(recorrido, circle);
+        geometry.setUpVector([0,0,1]);
         geometry.setClosedShapes(false);
         geometry.setClosedEndings(false);
         geometry.setCenteredInKernel(false);
 
-        pu.init.call(this, geometry, new ColoredMaterial(color));
+        pu.init.call(this, geometry, material);
     };
 
     // Métodos privados
@@ -420,9 +434,13 @@ Via.prototype = (function() {
 function Vias(path) {
 	ComplexModel.call(this);
 
-	var via1 = new Via(path ,1.6, 1, Color.GREY);
-	var via2 = new Via(path ,0.8, 2, Color.GREY);
-	var via3 = new Via(path ,1.6, 3, Color.GREY);
+	var material = new TexturedMaterial("images/metal.jpg");
+	material.scale(3,1);
+	material.translate(0,-0.4);
+
+	var via1 = new Via(path ,1.6, 1, material);
+	var via2 = new Via(path ,0.8, 2, material);
+	var via3 = new Via(path ,1.6, 3, material);
 
 	this.addChild(via1);
 	this.addChild(via2);
@@ -757,7 +775,12 @@ function Canio(length) {
 	geometry.setClosedShapes(true);
 	geometry.setClosedEndings(true);
 
-	this.init(geometry, new ColoredMaterial(Color.GREY));
+	// var material = new ColoredMaterial(Color.GREY);
+	var material = new TexturedMaterial("images/metal.jpg");
+	material.scale(3,1);
+	material.translate(0,-0.4);
+
+	this.init(geometry, material);
 }
 
 Canio.prototype = Object.create(PrimitiveModel.prototype);
@@ -918,7 +941,7 @@ ParedCabina.prototype.constructor = ParedCabina;
 /*
  * Soporte de la Vuelta al mundo
  */
-function SoporteLateral() {
+function SoporteLateral(material) {
 	PrimitiveModel.call(this);
 
 	var alto = 65;
@@ -932,7 +955,7 @@ function SoporteLateral() {
 	geometry.setClosedShapes(true);
 	geometry.setClosedEndings(true);
 
-	this.init(geometry, new ColoredMaterial(Color.GREY));
+	this.init(geometry, material);
 	this.rotateY(Utils.degToRad(90));
 	this.rotateZ(Utils.degToRad(90));
 	this.translateY(alto/2);
@@ -944,7 +967,7 @@ SoporteLateral.prototype.constructor = SoporteLateral;
 /*
  * Vuelta al mundo
  */
-function VueltaAlMundo() {
+function VueltaAlMundo(material) {
 	ComplexModel.call(this);
 
 	var anchoEstructura = 10;
@@ -953,11 +976,11 @@ function VueltaAlMundo() {
 
 	var desplazamientoSoporte = anchoEstructura/2 + 2;
 	var desplazamientoAlSuelo = -11;
-	this.soporteDerecho = new SoporteLateral();
+	this.soporteDerecho = new SoporteLateral(material);
 	this.soporteDerecho.translateZ(-desplazamientoSoporte);
 	this.soporteDerecho.translateY(desplazamientoAlSuelo);
 
-	this.soporteIzquierdo = new SoporteLateral();
+	this.soporteIzquierdo = new SoporteLateral(material);
 	this.soporteIzquierdo.translateZ(desplazamientoSoporte);
 	this.soporteIzquierdo.translateY(desplazamientoAlSuelo);
 
@@ -1163,7 +1186,16 @@ function init() {
 	fondo = new Fondo();
 	fondo.translateZ(-150);
 
-	vueltaAlMundo = new VueltaAlMundo();
+	var material = new TexturedMaterial("images/metal.jpg");
+	// material.setShininess(1.0);
+	material.scale(3,1);
+	material.translate(0,-0.4);
+	var images = ["images/beach/front.jpg", "images/beach/back.jpg",
+	              "images/green-grass-texture.jpg", "images/beach/top.jpg",
+	              "images/beach/left.jpg", "images/beach/right.jpg"];
+	material.setCubeMap(images, 1.0);
+
+	vueltaAlMundo = new VueltaAlMundo(material);
 	vueltaAlMundo.translateX(100);
 
 	sillasVoladoras = new SillasVoladoras();

@@ -1,7 +1,7 @@
 /*
  * Vuelta al mundo
  */
-function VueltaAlMundo() {
+function VueltaAlMundo(material) {
 	ComplexModel.call(this);
 
 	var anchoEstructura = 10;
@@ -10,11 +10,11 @@ function VueltaAlMundo() {
 
 	var desplazamientoSoporte = anchoEstructura/2 + 2;
 	var desplazamientoAlSuelo = -11;
-	this.soporteDerecho = new SoporteLateral();
+	this.soporteDerecho = new SoporteLateral(material);
 	this.soporteDerecho.translateZ(-desplazamientoSoporte);
 	this.soporteDerecho.translateY(desplazamientoAlSuelo);
 
-	this.soporteIzquierdo = new SoporteLateral();
+	this.soporteIzquierdo = new SoporteLateral(material);
 	this.soporteIzquierdo.translateZ(desplazamientoSoporte);
 	this.soporteIzquierdo.translateY(desplazamientoAlSuelo);
 

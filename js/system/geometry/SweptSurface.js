@@ -15,6 +15,8 @@ function SweptSurface(sweptPath, initialShape) {
 	this.centerInKernel = true; // centra el modelo generado en su kernel
 	this.type = 0;
 
+	this.upVector = [0, 1, 0];
+
 	this.init(sweptPath, initialShape);
 }
 
@@ -27,6 +29,10 @@ SweptSurface.prototype.init = function (sweptPath, initialShape) {
 		this.sweptPath = sweptPath;
 		this.addShape(initialShape, 0);
 	}
+};
+
+SweptSurface.prototype.setUpVector = function (up) {
+	this.upVector = up;
 };
 
 SweptSurface.prototype.setClosedShapes = function (closed) {
@@ -68,7 +74,7 @@ SweptSurface.prototype.prepareGeometry = function () {
 
 	for (var n = 0; n < nodes; n++) {
 		var currPointSpace = mat4.create();
-		var up = [0, 1, 0];
+		var up = this.upVector;
 		var isEnding = this.closedEndings && (n === 0 || n == nodes - 1);
 		var currShapePoints;
 		var currShapeKernel;

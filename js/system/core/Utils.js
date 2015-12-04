@@ -64,7 +64,7 @@ Utils.angleZ = function (vec, direccion) {
 };
 
 Utils.angleY = function (vec, direccion) {
-	var a = direccion;
+	var a = vec3.clone(direccion);
 	var b = vec3.clone(vec);
 	a[1] = 0;
 	//console.log("X Direction: " + b[0] + " Y Direction: " + b[1] + " Z Direction: " + b[2]);

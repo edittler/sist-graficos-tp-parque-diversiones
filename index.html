@@ -301,6 +301,9 @@
 
 		uniform samplerCube uReflectionMap;
 
+		uniform bool uUseWaterEffect;
+		uniform float uTime;
+
 		void main(void) {
 			float shininess = uShininess;
 			const float spotlightCutOff = 0.7;  // en radianes
@@ -311,10 +314,18 @@
 			const float linearAtt = 0.0001;
 			const float quadraticAtt = 0.01;
 
+			vec2 texCoord = vTextureCoord;
+			if(uUseWaterEffect){
+				//mix_factor = 0.5;
+				//secTexCoord = vec2(secTexCoord.t, -secTexCoord.s) * 2.0;
+				texCoord.t += uTime/10000.0;
+				//secTexCoord.t += uTime/10000.0;
+			}
+
 			vec3 normal = vNormal;
 			if(uUsingNormalMap) {
 				// Extrae la normal desde el normalMap
-				normal = vec3(2.0*texture2D(uSamplerNormalMap, vTextureCoord) - 1.0);
+				normal = vec3(2.0*texture2D(uSamplerNormalMap, texCoord) - 1.0);
 			}
 
 			vec3 lightDir = normalize(vLightDir);
@@ -354,11 +365,11 @@
 
 			// Se obtiene el color de la imagen, en el punto asociado al fragmento
 			// utilizando sus coordenadas de textura
-			vec4 textureColor = texture2D(uSampler, vTextureCoord);
+			vec4 textureColor = texture2D(uSampler, texCoord);
 
 			vec4 lightMapColor = vec4(1.0,1.0,1.0,1.0);
 			if (uUsingLightMap) {
-				lightMapColor = texture2D(uSamplerLightMap, vTextureCoord);
+				lightMapColor = texture2D(uSamplerLightMap, texCoord);
 				lightMapColor = vec4(1.0,1.0,1.0,1.0) + vec4(lightMapColor.xyz*uLightMapFactor, lightMapColor.w);
 			}
 

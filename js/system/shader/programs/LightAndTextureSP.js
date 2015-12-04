@@ -45,4 +45,7 @@ LightAndTextureSP.prototype.init = function (gl) {
 	this.locateUniform(gl, "uLightMapFactor");
 	this.locateUniform(gl, "uUsingNormalMap");
 	this.locateUniform(gl, "uUsingReflectionMap");
+
+	this.locateUniform(gl, "uUseWaterEffect");
+	this.locateUniform(gl, "uTime");
 };

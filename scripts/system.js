@@ -1317,6 +1317,9 @@ LightAndTextureSP.prototype.init = function (gl) {
 	this.locateUniform(gl, "uLightMapFactor");
 	this.locateUniform(gl, "uUsingNormalMap");
 	this.locateUniform(gl, "uUsingReflectionMap");
+
+	this.locateUniform(gl, "uUseWaterEffect");
+	this.locateUniform(gl, "uTime");
 };
 
 /*
@@ -2126,6 +2129,7 @@ function TexturedMaterial(imgSrc) {
 
 	this.usingLightMap = false;
 	this.usingNormalMap = false;
+	this.usingWaterEffect = false;
 
 	this.lightMapFactor;
 }
@@ -2423,6 +2427,9 @@ PrimitiveModel.prototype.setLights = function (gl, amb, dir, pos, carLightColor,
 
 	gl.uniform1f(this.shaderProgram.getUniform("uReflectionFactor"), this.material.getReflectionFactor());
 	gl.uniform1i(this.shaderProgram.getUniform("uUsingReflectionMap"), this.material.usingCubeMap);
+
+	gl.uniform1i(this.shaderProgram.getUniform("uUseWaterEffect"), this.material.usingWaterEffect);
+	gl.uniform1f(this.shaderProgram.getUniform("uTime"), this.time);
 };
 
 // @override

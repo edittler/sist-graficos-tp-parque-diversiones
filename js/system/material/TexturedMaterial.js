@@ -12,6 +12,7 @@ function TexturedMaterial(imgSrc) {
 
 	this.usingLightMap = false;
 	this.usingNormalMap = false;
+	this.usingWaterEffect = false;
 
 	this.lightMapFactor;
 }

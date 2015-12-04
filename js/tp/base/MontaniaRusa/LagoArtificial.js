@@ -37,14 +37,25 @@ function LagoArtificial() {
 
 	// Armo la superficie del lago
 	var material = new TexturedMaterial("images/water_texture.jpg");
-	material.scale(200.0, 200.0);
-	var agua = new Polygon(forma, material);
-	agua.translateZ(5);
-	agua.rotateY(Utils.degToRad(180));
+	material.scale(20.0, 20.0);
+	material.usingWaterEffect = true;
+	this.agua = new Polygon(forma, material);
+	this.agua.translateZ(5);
+	this.agua.rotateY(Utils.degToRad(180));
+	this.agua.time = 0;
+
+	var material2 = new TexturedMaterial("images/water_texture.jpg");
+	material2.scale(20.0, 20.0);
+	material2.usingWaterEffect = true;
+	this.agua2 = new Sprite(100, 100, material2);
+	this.agua2.translateZ(-20);
+	this.agua2.rotateY(Utils.degToRad(180));
+	this.agua2.time = 0;
 
 	// Agrego las partes al lago
 	this.addChild(model);
-	this.addChild(agua);
+	this.addChild(this.agua);
+	this.addChild(this.agua2);
 	this.translateX(50);
 	this.translateY(-100);
 	//this.translateZ(-50);
@@ -53,3 +64,8 @@ function LagoArtificial() {
 
 LagoArtificial.prototype = Object.create(ComplexModel.prototype);
 LagoArtificial.prototype.constructor = LagoArtificial;
+
+LagoArtificial.prototype.update = function (elapsedTime) {
+	this.agua.time += elapsedTime;
+	this.agua2.time += elapsedTime;
+};

@@ -146,9 +146,9 @@ Carro.prototype.update = function (elapsedTime) {
 	// corrijo por el kernel para que vaya sobre las vias de la montania rusa
 	// corrijo por la primer traslacion aplicada
 	this.setPosition(point[0] - this.kernel[0] + this.translateVector[0], point[1] - this.kernel[1] + this.translateVector[1], point[2] - this.kernel[2] + this.translateVector[2]);
-	this.rotateZ(this.angleZ(tan));
+	this.rotateZ(Utils.angleZ(tan, this.direccion));
 	//this.rotateY(this.angleY(tan));
-	this.rotateY(this.angleX(tan) - Math.PI / 2);
+	this.rotateY(Utils.angleX(tan, this.direccion) - Math.PI / 2);
 };
 
 Carro.prototype.angleZ = function (vec) {
@@ -409,15 +409,41 @@ MontaniaRusa.prototype.addColumnas = function(puntosDeControl) {
 	recorrido.addStretch(curva);
 	var kernel = recorrido.getKernelPoint();
 	var translateVector = this.getPosition();
-	
+
 	for (var i = 0; i < puntos.length; i++) {
 		var point = puntos[i];
 		var columna = new Columna(kernel[2] + 30);
 		columna.setPosition(point[0] - kernel[0] + translateVector[0], point[1] - kernel[1] + translateVector[1], 21 + point[2] - kernel[2] + translateVector[2]);
 		this.addChild(columna);
+
+		var soporteColumna = new SoporteColumna();
+		soporteColumna.setPosition(point[0] - kernel[0] + translateVector[0], point[1] - kernel[1] + translateVector[1], 30 + point[2] - kernel[2] + translateVector[2]);
+		soporteColumna.rotateZ(Utils.degToRad(90));
+		this.addChild(soporteColumna);
 	}
 };
 
+/*
+ * SoporteColumna
+ */
+function SoporteColumna() {
+	ComplexModel.call(this);
+
+	var forma = new TriCircle(1.6);
+
+	var material = new TexturedMaterial("images/metal.jpg");
+	material.scale(3, 1);
+	material.translate(0, -0.4);
+	var geometry = new Polygon(forma, material);
+	geometry.rotateX(Utils.degToRad(90));
+	geometry.rotateZ(Utils.degToRad(90));
+
+	this.addChild(geometry);
+}
+
+SoporteColumna.prototype = Object.create(ComplexModel.prototype);
+
+SoporteColumna.prototype.constructor = SoporteColumna;
 /*
     Via
 */

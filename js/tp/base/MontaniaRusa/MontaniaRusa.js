@@ -63,5 +63,10 @@ MontaniaRusa.prototype.addColumnas = function(puntosDeControl) {
 		var columna = new Columna(kernel[2] + 30);
 		columna.setPosition(point[0] - kernel[0] + translateVector[0], point[1] - kernel[1] + translateVector[1], 21 + point[2] - kernel[2] + translateVector[2]);
 		this.addChild(columna);
+
+		var soporteColumna = new SoporteColumna();
+		soporteColumna.setPosition(point[0] - kernel[0] + translateVector[0], point[1] - kernel[1] + translateVector[1], 30 + point[2] - kernel[2] + translateVector[2]);
+		// soporteColumna.rotateZ(this.rotateZ(Utils.angleZ(tan, soporteColumna.direccion)));
+		this.addChild(soporteColumna);
 	}
 };

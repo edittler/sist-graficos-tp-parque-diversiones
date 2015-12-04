@@ -76,9 +76,9 @@ Carro.prototype.update = function (elapsedTime) {
 	// corrijo por el kernel para que vaya sobre las vias de la montania rusa
 	// corrijo por la primer traslacion aplicada
 	this.setPosition(point[0] - this.kernel[0] + this.translateVector[0], point[1] - this.kernel[1] + this.translateVector[1], point[2] - this.kernel[2] + this.translateVector[2]);
-	this.rotateZ(this.angleZ(tan));
+	this.rotateZ(Utils.angleZ(tan, this.direccion));
 	//this.rotateY(this.angleY(tan));
-	this.rotateY(this.angleX(tan) - Math.PI / 2);
+	this.rotateY(Utils.angleX(tan, this.direccion) - Math.PI / 2);
 };
 
 Carro.prototype.angleZ = function (vec) {
